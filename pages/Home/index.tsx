@@ -75,7 +75,9 @@ export default function Home({ navigation }: Props) {
     <View style={styles.root}>
       <View style={styles.topContainer}>
         <EventTextInput
-          placeholder={'Please type in the event name to start taking attendance'}
+          placeholder={
+            'Please type in the event name to start taking attendance'
+          }
           placeholderTextColor={'#E0E0E0'}
           onChangeText={setEvent}
         />
@@ -84,7 +86,11 @@ export default function Home({ navigation }: Props) {
       </View>
       <Divider />
 
-      <FlatList data={DATA} renderItem={renderItem} keyExtractor={(item) => item.id} />
+      <FlatList
+        data={DATA}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 }

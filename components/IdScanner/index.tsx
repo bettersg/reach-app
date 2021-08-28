@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, LayoutRectangle, Platform, StyleSheet, View, Text } from 'react-native';
+import {
+  Dimensions,
+  LayoutRectangle,
+  Platform,
+  StyleSheet,
+  View,
+  Text,
+} from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
 import Constants from 'expo-constants';
 import LoadingView from '../LoadingView';
 import { Ionicons } from '@expo/vector-icons';
-import IdScannerCamera, { IdScannerCameraProp } from './components/IdScannerCamera';
+import IdScannerCamera, {
+  IdScannerCameraProp,
+} from './components/IdScannerCamera';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
@@ -14,7 +23,9 @@ const interestAreaRatios: Record<string, Record<string, number>> = {
   [BarCodeScanner.Constants.BarCodeType.code128]: { width: 0.9, height: 0.25 },
 };
 
-const getInterestAreaDimensions = (barCodeTypes: string[] | undefined): LayoutRectangle => {
+const getInterestAreaDimensions = (
+  barCodeTypes: string[] | undefined
+): LayoutRectangle => {
   const { width, height } = Dimensions.get('window');
   if (!barCodeTypes) {
     return { x: 0, y: 0, width, height };
@@ -96,7 +107,8 @@ const IdScanner: React.FC<IdScanner> = ({
       if (origin && boundsSize && interestAreaX && interestAreaY) {
         const { x: boundsX, y: boundsY } = origin;
         const { width: boundsWidth, height: boundsHeight } = boundsSize;
-        const { width: interestAreaWidth, height: interestAreaHeight } = interestArea;
+        const { width: interestAreaWidth, height: interestAreaHeight } =
+          interestArea;
         if (
           boundsX >= interestAreaX &&
           boundsY >= interestAreaY &&
@@ -119,7 +131,9 @@ const IdScanner: React.FC<IdScanner> = ({
       {hasCameraPermission && isScanningEnabled ? (
         <IdScannerCamera
           onBarCodeScanned={
-            hasLimitedInterestArea && platform === 'android' && Constants.isDevice
+            hasLimitedInterestArea &&
+            platform === 'android' &&
+            Constants.isDevice
               ? checkIfInInterestArea
               : onBarCodeScanned
           }

@@ -29,11 +29,25 @@ const getBarCodeTypeLabel = (barCodeType: string): string => {
 const getBarCodeTypeIcon = (barCodeType: string): ReactElement => {
   switch (barCodeType) {
     case BarCodeScanner.Constants.BarCodeType.qr:
-      return <AntDesign name="qrcode" size={24} color={'#FFFFFF'} style={{ marginRight: 8 }} />;
+      return (
+        <AntDesign
+          name="qrcode"
+          size={24}
+          color={'#FFFFFF'}
+          style={{ marginRight: 8 }}
+        />
+      );
     case BarCodeScanner.Constants.BarCodeType.code39:
     case BarCodeScanner.Constants.BarCodeType.code128:
     default:
-      return <Ionicons name="md-barcode" size={24} color={'#FFFFFF'} style={{ marginRight: 8 }} />;
+      return (
+        <Ionicons
+          name="md-barcode"
+          size={24}
+          color={'#FFFFFF'}
+          style={{ marginRight: 8 }}
+        />
+      );
   }
 };
 

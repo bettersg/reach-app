@@ -3,7 +3,9 @@ import { StyleSheet, View, Text } from 'react-native';
 
 import { RootTabScreenProps } from '@types';
 
-export default function EventDetails({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function EventDetails({
+  navigation,
+}: RootTabScreenProps<'TabOne'>) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Event Details</Text>

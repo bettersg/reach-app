@@ -1,7 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import { View, ActivityIndicator, ViewStyle } from 'react-native';
 
-const LoadingView: FunctionComponent<{ wrapperStyle?: ViewStyle }> = ({ wrapperStyle }) => {
+const LoadingView: FunctionComponent<{ wrapperStyle?: ViewStyle }> = ({
+  wrapperStyle,
+}) => {
   return (
     <View
       testID="loading-view"

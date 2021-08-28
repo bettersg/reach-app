@@ -1,10 +1,18 @@
 import React from 'react';
-import { LayoutRectangle, StyleProp, ViewStyle, StyleSheet } from 'react-native';
+import {
+  LayoutRectangle,
+  StyleProp,
+  ViewStyle,
+  StyleSheet,
+} from 'react-native';
 import { BarCodeScanner, BarCodeScannerProps } from 'expo-barcode-scanner';
 import LightBox from '../LightBox';
 import IdScannerLabel from '../IdScannerLabel';
 
-export type IdScannerCameraProp = Pick<BarCodeScannerProps, 'onBarCodeScanned' | 'barCodeTypes'> & {
+export type IdScannerCameraProp = Pick<
+  BarCodeScannerProps,
+  'onBarCodeScanned' | 'barCodeTypes'
+> & {
   cancelButtonText?: string;
   onCancel?: () => void;
   interestArea?: LayoutRectangle;
@@ -21,7 +29,11 @@ const IdScannerCamera: React.FC<IdScannerCameraProp> = ({
   return (
     <>
       {children}
-      <BarCodeScanner barCodeTypes={barCodeTypes} onBarCodeScanned={onBarCodeScanned} style={style ?? styles.scanner} />
+      <BarCodeScanner
+        barCodeTypes={barCodeTypes}
+        onBarCodeScanned={onBarCodeScanned}
+        style={style ?? styles.scanner}
+      />
       {interestArea && (
         <LightBox
           width={interestArea.width}
