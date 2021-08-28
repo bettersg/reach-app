@@ -8,7 +8,8 @@
       "@types": ["types"],
       "@constants": ["constants"],
       "@hooks/*": ["hooks/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "@utils/*": ["utils/*"]
     }
   }
 }
