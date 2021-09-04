@@ -25,7 +25,7 @@ export const createIfExistsDatabase = () => {
 // SELECT COUNT(*), event_id FROM attendance GROUP BY event_id;
 export const getAllEvents = async () => {
   const results = await executeSql(
-    'SELECT COUNT(*) as total, event_id, id FROM attendance GROUP BY event_id;'
+    'SELECT COUNT(*) as total, event_id FROM attendance GROUP BY event_id;'
   );
   return results;
 };
