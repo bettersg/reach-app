@@ -6,6 +6,8 @@ import { IdScanner } from '@components';
 import { BarCodeScannedCallback } from 'expo-barcode-scanner';
 import { useIsFocused } from '@react-navigation/native';
 import validateNric from '@utils/validateNric';
+import * as Crypto from 'expo-crypto';
+import { insertToAttendance } from '@utils/api';
 
 type Props = StackScreenProps<RootStackParamList, 'Scanner'>;
 
@@ -26,9 +28,14 @@ export default function Scanner({ navigation, route }: Props) {
       Alert.alert('NRIC Scanned', `${event.data} has been scanned`, [
         {
           text: 'OK',
-          onPress: () => {
+          onPress: async () => {
             if (isNricValid) {
               // TODO: store to db.
+              const hashedNric = await Crypto.digestStringAsync(
+                Crypto.CryptoDigestAlgorithm.MD5,
+                nric
+              );
+              insertToAttendance(hashedNric, eventId);
             }
             setEnableScanning(true);
           },
