@@ -11,7 +11,7 @@ export default function HomeStack() {
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} options={{ title: 'REACH' }} />
       <Stack.Screen name="Scanner" component={Scanner} options={{ title: 'Scanner', headerShown: false }} />
-      <Stack.Screen name="EventDetails" component={EventDetails} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="EventDetails" component={EventDetails} options={{ title: 'Check-ins' }} />
     </Stack.Navigator>
   );
 }

@@ -24,6 +24,18 @@
     "react/display-name": "off",
     "react/prop-types": 0,
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error"
+  },
+  "settings": {
+    "flowtype": {
+      "onlyFilesWithFlowAnnotation": true
+    },
+    "react": {
+      "pragma": "React",
+      "version": "detect",
+      "flowVersion": "version('flow-bin')"
+    }
   }
 }
