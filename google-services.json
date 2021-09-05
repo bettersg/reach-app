@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "548067245954",
+    "firebase_url": "https://better-sg-attendance-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "better-sg-attendance",
+    "storage_bucket": "better-sg-attendance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548067245954:android:f625c712221843b914999b",
+        "android_client_info": {
+          "package_name": "sg.better.attendance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548067245954-kkherp0oebv9f7pt6motmkk316j2ud1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0wKOgWuwlZacK7bQzBlZjgVXZ-7C9rUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548067245954-kkherp0oebv9f7pt6motmkk316j2ud1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "548067245954-pq74lcnqti8a049qqhjmlb4hb4vllddj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "sg.better.attendance"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
