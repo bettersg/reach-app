@@ -24,11 +24,11 @@ export interface Event {
 
 /** Retrieves events which start +- 12 hrs from the specified epoch time (default = now) */
 export async function getActiveEvents(now: number = moment.now()): Promise<Event[]> {
-  const HALF_DAY_IN_SECONDS = 43200;
+  const HALF_DAY_IN_MILLISECONDS = 43200000;
   return fs
     .collection('events')
-    .where('time', '>=', now - HALF_DAY_IN_SECONDS)
-    .where('time', '<', now + HALF_DAY_IN_SECONDS)
+    .where('time', '>=', now - HALF_DAY_IN_MILLISECONDS)
+    .where('time', '<', now + HALF_DAY_IN_MILLISECONDS)
     .get()
     .then(snapshot => snapshot.docs.map((doc) => doc.data() as Event));
 }
@@ -57,6 +57,15 @@ export async function registerCheckin(nric: string, eventId: string, checkinTime
     .collection('checkins')
     .doc()
     .set(checkin);
+}
+
+/** Retrieves the checkins to an event. */
+export async function getEventCheckins(eventId: string): Promise<Checkin[]> {
+  return fs
+      .collection('checkins')
+      .where('eventId', '==', eventId)
+      .get()
+      .then(snapshot => snapshot.docs.map(doc => doc.data() as Checkin));
 }
 
 /** If event does not yet exist, creates one for it with now as default timestamp. */

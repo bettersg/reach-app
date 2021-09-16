@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {useCallback, useEffect, useContext} from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import EventTextInput from './components/EventTextInput';
 import { SolidButton, Spacer, Divider } from '@components';
@@ -8,11 +8,11 @@ import { StackScreenProps } from '@react-navigation/stack';
 import EventDetailRow from './components/EventDetailRow';
 import { useFocusEffect } from '@react-navigation/native';
 import { createOrGetEvent, EventSummary, getActiveEvents, getEventSummary } from '@utils/events.datastore';
+import {EventContext} from '../../navigation/EventProvider';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function Home({ navigation }: Props) {
-  const [event, setEvent] = useState('');
-  const [events, setEvents] = useState<EventSummary[]>([]);
+  const { event, setEvent, events, setEvents } = useContext(EventContext);
 
   const handleOnStartSession = useCallback(() => {
     if (!event) {
@@ -32,7 +32,7 @@ export default function Home({ navigation }: Props) {
     (async () => {
       const activeEvents = await getActiveEvents();
       const eventSummaries = await Promise.all(activeEvents.map(event => getEventSummary(event)));
-      setEvents(eventSummaries);
+      if (setEvents) setEvents(eventSummaries);
     })();
   }, []);
 
@@ -41,7 +41,7 @@ export default function Home({ navigation }: Props) {
       (async () => {
         const activeEvents = await getActiveEvents();
         const eventSummaries = await Promise.all(activeEvents.map(event => getEventSummary(event)));
-        setEvents(eventSummaries);
+        if (setEvents) setEvents(eventSummaries);
       })();
     }, [])
   );

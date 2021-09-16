@@ -24,7 +24,7 @@ export default function LoginScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <StatusBar/>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Login. Temporary step for Firebase backend.</Text>
       <InputField
         placeholder={
           'Enter email'

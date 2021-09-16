@@ -23,7 +23,7 @@ export default function SignupScreen({navigation}: Props) {
   return (
     <View style={styles.container}>
       <StatusBar />
-      <Text style={styles.title}>Create new account</Text>
+      <Text style={styles.title}>Create new account. Temporary step for Firebase backend.</Text>
       <InputField
         placeholder={
           'Enter email'
