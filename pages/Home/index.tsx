@@ -1,23 +1,24 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {useCallback, useEffect, useContext} from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import EventTextInput from './components/EventTextInput';
 import { SolidButton, Spacer, Divider } from '@components';
 import { Pages } from '@constants';
-import { RootStackParamList, Event } from '@types';
+import { RootStackParamList } from '@types';
 import { StackScreenProps } from '@react-navigation/stack';
 import EventDetailRow from './components/EventDetailRow';
 import { useFocusEffect } from '@react-navigation/native';
-import { getAllEvents } from '@utils/api';
+import { createOrGetEvent, EventSummary, getActiveEvents, getEventSummary } from '@utils/events.datastore';
+import {EventContext} from '../../navigation/EventProvider';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function Home({ navigation }: Props) {
-  const [event, setEvent] = useState('');
-  const [events, setEvents] = useState<Event[]>([]);
+  const { event, setEvent, events, setEvents } = useContext(EventContext);
 
   const handleOnStartSession = useCallback(() => {
     if (!event) {
       return;
     }
+    (async () => {createOrGetEvent(event);})();
 
     navigation.navigate(Pages.SCANNER, {
       eventId: event,
@@ -29,42 +30,26 @@ export default function Home({ navigation }: Props) {
    */
   useEffect(() => {
     (async () => {
-      const results = await getAllEvents();
-      console.log(results);
-      const transformedEvents = results.map((event) => {
-        return {
-          title: event.event_id,
-          totalScanned: event.total,
-        };
-      });
-
-      setEvents(transformedEvents);
+      const activeEvents = await getActiveEvents();
+      const eventSummaries = await Promise.all(activeEvents.map(event => getEventSummary(event)));
+      if (setEvents) setEvents(eventSummaries);
     })();
   }, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      // Do something when the screen is focused
-
       (async () => {
-        const results = await getAllEvents();
-        console.log(results);
-        const transformedEvents = results.map((event) => {
-          return {
-            title: event.event_id,
-            totalScanned: event.total,
-          };
-        });
-
-        setEvents(transformedEvents);
+        const activeEvents = await getActiveEvents();
+        const eventSummaries = await Promise.all(activeEvents.map(event => getEventSummary(event)));
+        if (setEvents) setEvents(eventSummaries);
       })();
     }, [])
   );
 
-  const renderItem = ({ item }: { item: Event }) => (
+  const renderItem = ({ item }: { item: EventSummary }) => (
     <EventDetailRow
-      title={item.title}
-      totalScanned={item.totalScanned}
+      title={item.eventId}
+      totalScanned={item.numCheckins}
       onPress={() => {
         navigation.navigate(Pages.EVENT_DETAILS);
       }}
@@ -89,7 +74,7 @@ export default function Home({ navigation }: Props) {
       <FlatList
         data={events}
         renderItem={renderItem}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => item.eventId}
       />
     </View>
   );
