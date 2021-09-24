@@ -1,9 +1,8 @@
-import React, { useState, createContext, ReactElement, Dispatch, SetStateAction } from 'react';
-import firebase from 'firebase/app';
-import {EventSummary} from '@utils/events.datastore';
+import React, { useState, createContext, ReactElement } from 'react';
+import {EventSummary} from '@root/utils/events.datastore';
 
 
-export const EventContext= createContext<{
+export const EventContext = createContext<{
   event?: string,
   setEvent?: React.Dispatch<React.SetStateAction<string>>
   events?: EventSummary[],

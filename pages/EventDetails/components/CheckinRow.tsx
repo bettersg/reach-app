@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import {Checkin} from '@utils/events.datastore';
+import {Checkin} from '@root/utils/events.datastore';
 import moment from 'moment';
 
 type Props = {

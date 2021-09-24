@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { View, ActivityIndicator } from 'react-native';
 
-import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
+import { AuthenticatedUserContext } from './providers/AuthenticatedUserProvider';
 import AuthStack from './AuthStack';
-import HomeStack from './HomeStack';
-import { initFirebase } from '@utils/initFirebaseApp';
+import CheckinStack from './CheckinStack';
+import { initFirebase } from '@root/utils/initFirebaseApp';
 
 const {auth} = initFirebase();
 
@@ -38,7 +38,7 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {user ? <HomeStack /> : <AuthStack />}
+      {user ? <CheckinStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

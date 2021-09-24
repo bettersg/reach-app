@@ -1,13 +1,12 @@
-import { initFirebase } from '@utils/initFirebaseApp';
+import { initFirebase } from '@root/utils/initFirebaseApp';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
-import { RootStackParamList, Event } from '@types';
+import { RootStackParamList, Event } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { SolidButton, InputField, ErrorMessage } from '../components';
-import { Pages } from '@constants';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 const {auth} = initFirebase();
 
@@ -42,7 +41,7 @@ export default function LoginScreen({ navigation }: Props) {
         label='Login'
       />
       <RNButton
-        onPress={() => navigation.navigate(Pages.SIGNUP)}
+        onPress={() => navigation.navigate('Signup')}
         title='Go to Signup'
         color='#fff'
       />

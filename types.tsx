@@ -4,6 +4,7 @@ export type RootStackParamList = {
   EventDetails: undefined;
   Signup: undefined;
   Login: undefined;
+  History: undefined;
 };
 
 export type Page = keyof RootStackParamList;

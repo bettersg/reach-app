@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, TextInputProps, TextInput } from 'react-native';
-import { Colors } from '@constants';
+import { Colors } from '@root/constants';
 
 const EventTextInput = (props: TextInputProps) => {
   return (

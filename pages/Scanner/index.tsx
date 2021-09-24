@@ -1,31 +1,32 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, View, Alert } from 'react-native';
-import { RootStackParamList } from '@types';
+import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
-import { IdScanner } from '@components';
+import { IdScanner } from '@root/components';
 import { BarCodeScannedCallback } from 'expo-barcode-scanner';
 import { useIsFocused } from '@react-navigation/native';
-import validateNric from '@utils/validateNric';
-import { registerCheckin } from '@utils/events.datastore';
+import validateNric from '@root/utils/validateNric';
+import { registerCheckin } from '@root/utils/events.datastore';
+import { EventContext } from '@root/navigation/providers/EventProvider';
 
 type Props = StackScreenProps<RootStackParamList, 'Scanner'>;
 
 export default function Scanner({ navigation, route }: Props) {
-  const { eventId } = route.params;
+  const { event } = useContext(EventContext);
   const [enableScanning, setEnableScanning] = useState(true);
   const isFocused = useIsFocused();
 
-  const onBarCodeScanned: BarCodeScannedCallback = (event) => {
-    if (event.data && isFocused && enableScanning) {
+  const onBarCodeScanned: BarCodeScannedCallback = (barCodeEvent) => {
+    if (barCodeEvent.data && isFocused && enableScanning) {
       setEnableScanning(false);
-      const nric = event.data;
+      const nric = barCodeEvent.data;
       const isNricValid = validateNric(nric);
       if (isNricValid) {
-        Alert.alert('NRIC Scanned', `${event.data} has been scanned`, [
+        Alert.alert('NRIC Scanned', `${barCodeEvent.data} has been scanned`, [
           {
             text: 'OK',
             onPress: async () => {
-              registerCheckin(nric, eventId);
+              registerCheckin(nric, event!);
               setEnableScanning(true);
             },
           },

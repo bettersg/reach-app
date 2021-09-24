@@ -1,86 +1,76 @@
 import React, {useCallback, useEffect, useContext} from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
-import EventTextInput from './components/EventTextInput';
-import { SolidButton, Spacer, Divider } from '@components';
-import { Pages } from '@constants';
-import { RootStackParamList } from '@types';
+import { Image, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Spacer, Divider } from '@root/components';
+import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
-import EventDetailRow from './components/EventDetailRow';
 import { useFocusEffect } from '@react-navigation/native';
-import { createOrGetEvent, EventSummary, getActiveEvents, getEventSummary } from '@utils/events.datastore';
-import {EventContext} from '../../navigation/EventProvider';
+import { createOrGetEvent } from '@root/utils/events.datastore';
+import {EventContext} from '@root/navigation/providers/EventProvider';
+import moment from 'moment';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function Home({ navigation }: Props) {
-  const { event, setEvent, events, setEvents } = useContext(EventContext);
+  const { event, setEvent } = useContext(EventContext);
 
-  const handleOnStartSession = useCallback(() => {
-    if (!event) {
-      return;
-    }
-    (async () => {createOrGetEvent(event);})();
+  async function handleDropIn() {
+    if (!setEvent) return;
+    const programName = `Drop In ${moment().format('YYYY-MM-DD')}`;
+    setEvent(programName);
+    await createOrGetEvent(programName);
+    navigation.navigate('Scanner', {eventId: programName});
+  }
 
-    navigation.navigate(Pages.SCANNER, {
-      eventId: event,
-    });
-  }, [event]);
+  async function handleAttendProgram() {
+    if (!setEvent) return;
+    const programName = `Other Program ${moment().format('YYYY-MM-DD')}`;
+    setEvent(programName);
+    createOrGetEvent(programName);
+    navigation.navigate('Scanner', {eventId: programName});
+  }
 
-  /**
-   * Fetch the event details list.
-   */
-  useEffect(() => {
-    (async () => {
-      const activeEvents = await getActiveEvents();
-      const eventSummaries = await Promise.all(activeEvents.map(event => getEventSummary(event)));
-      if (setEvents) setEvents(eventSummaries);
-    })();
+  const handleOnHistory = useCallback(() => {
+    navigation.navigate('History');
   }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      (async () => {
-        const activeEvents = await getActiveEvents();
-        const eventSummaries = await Promise.all(activeEvents.map(event => getEventSummary(event)));
-        if (setEvents) setEvents(eventSummaries);
-      })();
-    }, [])
-  );
-
-  const renderItem = ({ item }: { item: EventSummary }) => (
-    <EventDetailRow
-      title={item.eventId}
-      totalScanned={item.numCheckins}
-      onPress={() => {
-        navigation.navigate(Pages.EVENT_DETAILS);
-      }}
-    />
-  );
 
   return (
     <View style={styles.root}>
-      <View style={styles.topContainer}>
-        <EventTextInput
-          placeholder={
-            'Please type in the event name to start taking attendance'
-          }
-          placeholderTextColor={'#E0E0E0'}
-          onChangeText={setEvent}
-        />
-        <Spacer />
-        <SolidButton label={'Start Session'} onPress={handleOnStartSession} />
+      <Text onPress={handleOnHistory} style={{textAlign: 'right', paddingHorizontal: 20, paddingVertical: 20}}>See History</Text>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
+        <Image source={require('@root/assets/images/reach-icon.png')} style={{width: 120,height:40,}} />
+      </View> 
+      <View style={{paddingHorizontal: 150, paddingVertical: 20, flex: 1}}>
+        <Text style={{fontSize: 36, alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>Hey there! Please check in before entering the centre.</Text>
+      </View>
+      <View style={{paddingHorizontal: 60, paddingVertical: 20, flex: 1, alignItems: 'center'}}>
+        <TouchableOpacity onPress={handleDropIn} style={{borderStyle: 'solid', borderWidth: 2, borderColor: '#DDDDDD', width: 448, height:124, justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={require('@root/assets/images/person-pin.png')} style={{flex: 1, resizeMode: 'contain'}} />
+          <Text style={{fontSize: 18, textAlign: 'left', flex: 2}}>I am dropping in for a visit</Text>
+          <View style={{flex: 0.6}} />
+        </TouchableOpacity>
+      </View>
+      <View style={{paddingHorizontal: 60, paddingVertical: 20, flex: 1, alignItems: 'center'}}>
+        <TouchableOpacity onPress={handleAttendProgram} style={{borderStyle: 'solid', borderWidth: 2, borderColor: '#DDDDDD', width: 448, height:124, justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={require('@root/assets/images/flat-icon.png')} style={{flex: 1, resizeMode: 'contain'}} />
+          <Text style={{fontSize: 18, textAlign: 'left', flex: 2}}>I am here to attend a program</Text>
+          <View style={{flex: 0.6}} />
+        </TouchableOpacity>
+      </View>
+      <View style={{paddingHorizontal: 20, paddingVertical: 20, flex: 3}}>
       </View>
       <Divider />
-
-      <FlatList
-        data={events}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.eventId}
-      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  reachIcon: {
+    alignItems:'center',
+    justifyContent: 'center'
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'contain'
+  },
   root: {
     flex: 1,
     backgroundColor: 'white',
