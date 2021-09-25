@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { AuthenticatedUserProvider } from './AuthenticatedUserProvider';
+import { AuthenticatedUserProvider } from './providers/AuthenticatedUserProvider';
 import RootNavigator from './RootNavigator';
-import {EventProvider} from './EventProvider';
+import {EventProvider} from './providers/EventProvider';
 
 /**
  * Wrap all providers here

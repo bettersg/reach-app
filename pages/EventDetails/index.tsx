@@ -2,10 +2,10 @@ import * as React from 'react';
 import {useContext, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootStackParamList} from '@types';
-import {Checkin, getEventCheckins} from '@utils/events.datastore';
-import CheckinRow from '@pages/EventDetails/components/CheckinRow';
-import {EventContext} from '../../navigation/EventProvider';
+import {RootStackParamList} from '@root/types';
+import {Checkin, getEventCheckins} from '@root/utils/events.datastore';
+import CheckinRow from '@root/pages/EventDetails/components/CheckinRow';
+import {EventContext} from '@root/navigation/providers/EventProvider';
 
 type Props = StackScreenProps<RootStackParamList, 'EventDetails'>;
 

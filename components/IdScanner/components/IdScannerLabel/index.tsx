@@ -9,9 +9,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   labelText: {
-    fontWeight: 'bold',
     color: 'white',
-    fontSize: 12,
+    fontSize: 36,
   },
 });
 
@@ -22,7 +21,7 @@ const getBarCodeTypeLabel = (barCodeType: string): string => {
     case BarCodeScanner.Constants.BarCodeType.code39:
     case BarCodeScanner.Constants.BarCodeType.code128:
     default:
-      return 'scan Barcode';
+      return 'Scan your student pass / NRIC';
   }
 };
 
@@ -32,7 +31,7 @@ const getBarCodeTypeIcon = (barCodeType: string): ReactElement => {
       return (
         <AntDesign
           name="qrcode"
-          size={24}
+          size={40}
           color={'#FFFFFF'}
           style={{ marginRight: 8 }}
         />
@@ -43,7 +42,7 @@ const getBarCodeTypeIcon = (barCodeType: string): ReactElement => {
       return (
         <Ionicons
           name="md-barcode"
-          size={24}
+          size={40}
           color={'#FFFFFF'}
           style={{ marginRight: 8 }}
         />

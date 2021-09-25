@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import {Checkin} from '@utils/events.datastore';
+import {Checkin} from '@root/utils/events.datastore';
 import moment from 'moment';
 
 type Props = {
@@ -11,7 +11,7 @@ const CheckinRow = ({ checkin }: Props) => {
     return (
         <View style={styles.root}>
             <View style={styles.leftContent}>
-                <Text>{checkin.idHash}</Text>
+                <Text>{checkin.identifier}</Text>
             </View>
             <View style={styles.rightContent}>
                 <Text>Scanned at</Text>

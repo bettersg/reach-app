@@ -1,6 +1,6 @@
 // Thanks to https://gist.github.com/kyrene-chew/6f275325335ab27895beb7a9a7b4c1cb
 
-const validate = (nricInput: string): boolean => {
+export const isValidNric = (nricInput: string): boolean => {
   // validation rules
   const nricRegex = /(\D)(\d{7})(\D)/;
   const nricTypeRegex = /S|T|F|G/;
@@ -51,7 +51,7 @@ const validate = (nricInput: string): boolean => {
 
 const validateAndCleanNric = (inputNric: string): string => {
   const cleanedInputNric = inputNric.trim().slice(0, 9).toUpperCase();
-  const isNricValid = validate(cleanedInputNric);
+  const isNricValid = isValidNric(cleanedInputNric);
   if (!isNricValid) {
     throw new Error('Invalid NRIC');
   }

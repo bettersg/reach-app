@@ -4,12 +4,7 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@components": ["components"],
-      "@types": ["types"],
-      "@constants": ["constants"],
-      "@hooks/*": ["hooks/*"],
-      "@pages/*": ["pages/*"],
-      "@utils/*": ["utils/*"]
+      "@root/*": ["./*"],
     }
   }
 }

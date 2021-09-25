@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
-import { Colors } from '@constants';
+import { Colors } from '@root/constants';
 
 type Props = {
   label: string;

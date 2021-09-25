@@ -1,12 +1,12 @@
-import {initFirebase} from '@utils/initFirebaseApp';
+import {initFirebase} from '@root/utils/initFirebaseApp';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
-import { RootStackParamList, Event } from '@types';
+import { RootStackParamList, Event } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
-import { SolidButton, InputField, ErrorMessage } from '../components';
-import { Pages } from '@constants';
+import { SolidButton } from '../components';
+import { TextInput } from 'react-native-paper';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 const {auth} = initFirebase();
 
@@ -24,16 +24,12 @@ export default function SignupScreen({navigation}: Props) {
     <View style={styles.container}>
       <StatusBar />
       <Text style={styles.title}>Create new account. Temporary step for Firebase backend.</Text>
-      <InputField
-        placeholder={
-          'Enter email'
-        }
-        placeholderTextColor={'#E0E0E0'}
+      <TextInput
+        label={'Enter email'}
         onChangeText={setEmail}
       />
-      <InputField
-        placeholder={'Enter password'}
-        placeholderTextColor={'#E0E0E0'}
+      <TextInput
+        label={'Enter password'}
         onChangeText={setPassword}
       />
       <SolidButton
@@ -41,7 +37,7 @@ export default function SignupScreen({navigation}: Props) {
         label='Signup'
       />
       <RNButton
-        onPress={() => navigation.navigate(Pages.LOGIN)}
+        onPress={() => navigation.navigate('Login')}
         title='Go to Login'
         color='#fff'
       />
