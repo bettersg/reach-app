@@ -1,12 +1,12 @@
 import React, { useEffect, useContext} from 'react';
-import { Text, StyleSheet, View, FlatList } from 'react-native';
-import { Divider } from '@root/components';
+import { FlatList } from 'react-native';
 import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import EventDetailRow from '@root/pages/History/components/EventDetailRow';
 import { useFocusEffect } from '@react-navigation/native';
 import { EventSummary, getActiveEvents, getEventSummary } from '@root/utils/events.datastore';
 import {EventContext} from '@root/navigation/providers/EventProvider';
+import ContentFrame from '@root/components/ContentFrame';
 type Props = StackScreenProps<RootStackParamList, 'History'>;
 
 export default function History({ navigation }: Props) {
@@ -44,35 +44,12 @@ export default function History({ navigation }: Props) {
   );
 
   return (
-    <View style={styles.root}>
-      <View style={styles.topContainer}>
-        <Text style={styles.titleText}>Past Attendance</Text>
-      </View>
-      <Divider />
-
+    <ContentFrame onBack={() => navigation.navigate('Home')}>
       <FlatList
         data={events}
         renderItem={renderItem}
         keyExtractor={(item) => item.eventId}
       />
-    </View>
+    </ContentFrame>
   );
 }
-
-const styles = StyleSheet.create({
-  titleText: {
-    fontSize: 20,
-    fontWeight: 'bold'
-  },
-  root: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  topContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  spacer: {
-    height: 10,
-  },
-});

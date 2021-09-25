@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
+  Image,
   Dimensions,
   LayoutRectangle,
   Platform,
   StyleSheet,
   View,
   Text,
+  TouchableWithoutFeedback
 } from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
@@ -15,7 +17,6 @@ import { Ionicons } from '@expo/vector-icons';
 import IdScannerCamera, {
   IdScannerCameraProp,
 } from './components/IdScannerCamera';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
   [BarCodeScanner.Constants.BarCodeType.qr]: { width: 0.7, height: 0.35 },
@@ -145,11 +146,18 @@ const IdScanner: React.FC<IdScanner> = ({
           <View style={styles.backButtonWrapper}>
             <TouchableWithoutFeedback onPress={onCancel}>
               <View style={styles.backButton}>
-                <Ionicons name="ios-arrow-back" size={16} color={'white'} />
-                <Text style={styles.backButtonText}>Back</Text>
+                <Ionicons name="ios-arrow-back" size={20} color={'white'} />
+                <Text style={styles.backButtonText}>BACK TO CHECK IN</Text>
               </View>
             </TouchableWithoutFeedback>
           </View>
+          <View style={{flex: 1, borderWidth: 2, borderColor: 'black'}} />
+          <View style={styles.keyboardWrapper}> 
+            <TouchableWithoutFeedback onPress={onCancel}>
+              <Image source={require('@root/assets/images/keyboard.png')} style={styles.keyboard} />
+            </TouchableWithoutFeedback>
+          </View>
+          
         </IdScannerCamera>
       ) : (
         <View style={{ flex: 1 }}>
@@ -166,8 +174,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   backButtonWrapper: {
-    position: 'absolute',
-    marginTop: 48,
+    flex: 1,
+    zIndex: Number.MAX_SAFE_INTEGER,
+  },
+  keyboardWrapper: {
+    flex: 0.8,
+    alignContent: 'center',
+    paddingTop: 0,
     zIndex: Number.MAX_SAFE_INTEGER,
   },
   scanner: {
@@ -177,16 +190,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   backButton: {
+    position: 'absolute',
     flexDirection: 'row',
-    padding: 10,
+    padding: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
   backButtonText: {
     paddingLeft: 10,
     color: 'white',
-    fontSize: 16,
+    fontSize: 12,
   },
+  keyboard: {
+    position: 'absolute',
+    paddingHorizontal: 380,
+    resizeMode: 'contain'
+  }
 });
 
 export default IdScanner;

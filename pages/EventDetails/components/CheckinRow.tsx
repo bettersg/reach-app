@@ -11,7 +11,7 @@ const CheckinRow = ({ checkin }: Props) => {
     return (
         <View style={styles.root}>
             <View style={styles.leftContent}>
-                <Text>{checkin.idHash}</Text>
+                <Text>{checkin.identifier}</Text>
             </View>
             <View style={styles.rightContent}>
                 <Text>Scanned at</Text>

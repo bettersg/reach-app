@@ -4,7 +4,7 @@ import { View, ActivityIndicator } from 'react-native';
 
 import { AuthenticatedUserContext } from './providers/AuthenticatedUserProvider';
 import AuthStack from './AuthStack';
-import CheckinStack from './CheckinStack';
+import VisitStack from './VisitStack';
 import { initFirebase } from '@root/utils/initFirebaseApp';
 
 const {auth} = initFirebase();
@@ -38,7 +38,7 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {user ? <CheckinStack /> : <AuthStack />}
+      {user ? <VisitStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

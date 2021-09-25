@@ -1,12 +1,13 @@
-import React, {useCallback, useEffect, useContext} from 'react';
+import React, {useCallback, useContext} from 'react';
 import { Image, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Spacer, Divider } from '@root/components';
+import { Divider, Spacer } from '@root/components';
 import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useFocusEffect } from '@react-navigation/native';
 import { createOrGetEvent } from '@root/utils/events.datastore';
 import {EventContext} from '@root/navigation/providers/EventProvider';
 import moment from 'moment';
+import ContentFrame from '@root/components/ContentFrame';
+import { commonStyles } from '@root/commonStyles';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function Home({ navigation }: Props) {
@@ -17,7 +18,7 @@ export default function Home({ navigation }: Props) {
     const programName = `Drop In ${moment().format('YYYY-MM-DD')}`;
     setEvent(programName);
     await createOrGetEvent(programName);
-    navigation.navigate('Scanner', {eventId: programName});
+    navigation.navigate('CheckinTabs');
   }
 
   async function handleAttendProgram() {
@@ -25,7 +26,7 @@ export default function Home({ navigation }: Props) {
     const programName = `Other Program ${moment().format('YYYY-MM-DD')}`;
     setEvent(programName);
     createOrGetEvent(programName);
-    navigation.navigate('Scanner', {eventId: programName});
+    navigation.navigate('CheckinTabs');
   }
 
   const handleOnHistory = useCallback(() => {
@@ -33,32 +34,27 @@ export default function Home({ navigation }: Props) {
   }, []);
 
   return (
-    <View style={styles.root}>
-      <Text onPress={handleOnHistory} style={{textAlign: 'right', paddingHorizontal: 20, paddingVertical: 20}}>See History</Text>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-        <Image source={require('@root/assets/images/reach-icon.png')} style={{width: 120,height:40,}} />
-      </View> 
-      <View style={{paddingHorizontal: 150, paddingVertical: 20, flex: 1}}>
-        <Text style={{fontSize: 36, alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>Hey there! Please check in before entering the centre.</Text>
-      </View>
-      <View style={{paddingHorizontal: 60, paddingVertical: 20, flex: 1, alignItems: 'center'}}>
+    <ContentFrame>
+      <View style={commonStyles.thickPad}>
+        <Text style={commonStyles.actionText}>Hey there! Please check in before entering the centre.</Text>
+        <View style={{height: 50}}/>
         <TouchableOpacity onPress={handleDropIn} style={{borderStyle: 'solid', borderWidth: 2, borderColor: '#DDDDDD', width: 448, height:124, justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={require('@root/assets/images/person-pin.png')} style={{flex: 1, resizeMode: 'contain'}} />
-          <Text style={{fontSize: 18, textAlign: 'left', flex: 2}}>I am dropping in for a visit</Text>
-          <View style={{flex: 0.6}} />
+            <Image source={require('@root/assets/images/person-pin.png')} style={{flex: 1, resizeMode: 'contain'}} />
+            <Text style={{fontSize: 18, textAlign: 'left', flex: 2}}>I am dropping in for a visit</Text>
+            <View style={{flex: 0.6}} />
         </TouchableOpacity>
-      </View>
-      <View style={{paddingHorizontal: 60, paddingVertical: 20, flex: 1, alignItems: 'center'}}>
+        <View style={{height: 50}}/>
         <TouchableOpacity onPress={handleAttendProgram} style={{borderStyle: 'solid', borderWidth: 2, borderColor: '#DDDDDD', width: 448, height:124, justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
           <Image source={require('@root/assets/images/flat-icon.png')} style={{flex: 1, resizeMode: 'contain'}} />
           <Text style={{fontSize: 18, textAlign: 'left', flex: 2}}>I am here to attend a program</Text>
           <View style={{flex: 0.6}} />
         </TouchableOpacity>
       </View>
-      <View style={{paddingHorizontal: 20, paddingVertical: 20, flex: 3}}>
+      <View style={{alignSelf: 'flex-end'}}>
+        <View style={{flex: 1}}/>
+        <Text onPress={handleOnHistory} style={{flex: 1}}>See History</Text>
       </View>
-      <Divider />
-    </View>
+    </ContentFrame>
   );
 }
 

@@ -3,13 +3,13 @@ import { hash } from './cryptography';
 import { initFirebase } from './initFirebaseApp';
 
 const {fs} = initFirebase();
-const collection = fs.collection('checkins');
-
 
 export interface Checkin {
-  idHash: string,
+  identifier: string,
   eventId: string
   checkinTimestamp: number,
+  identity: 'NRIC' | 'NAME',
+  phone?: string,
 }
 
 export interface EventSummary extends Event {
@@ -41,16 +41,33 @@ export async function getEventSummary(event: Event): Promise<EventSummary> {
     .get()
     .then(snapshot => snapshot.docs.map(doc => doc.data() as Checkin));
 
-  const numCheckins = (new Set(checkins.map(checkin => checkin.idHash))).size;
+  const numCheckins = (new Set(checkins.map(checkin => checkin.identifier))).size;
 
   return {eventId: event.eventId, time: event.time, numCheckins};
 }
 
+/** For NRIC. */
 export async function registerCheckin(nric: string, eventId: string, checkinTimestamp: number = moment.now()) {
   const checkin: Checkin = {
-    idHash: await hash(nric),
+    identifier: await hash(nric),
     eventId,
-    checkinTimestamp
+    checkinTimestamp,
+    identity: 'NRIC'
+  };
+  
+  await fs
+    .collection('checkins')
+    .doc()
+    .set(checkin);
+}
+
+export async function registerNameCheckin(name: string, phone: string, eventId: string, checkinTimestamp: number = moment.now()) {
+  const checkin: Checkin = {
+    identifier: name,
+    eventId,
+    checkinTimestamp,
+    identity: 'NAME',
+    phone
   };
   
   await fs
