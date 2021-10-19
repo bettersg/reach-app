@@ -1,15 +1,23 @@
 import moment from 'moment';
-import { hash } from './cryptography';
 import { initFirebase } from './initFirebaseApp';
 
 const {fs} = initFirebase();
 
-export interface Checkin {
-  identifier: string,
+export type Checkin = ProfileCheckin | NameCheckin;
+
+export interface NameCheckin {
   eventId: string
   checkinTimestamp: number,
-  identity: 'NRIC' | 'NAME',
-  phone?: string,
+  identity: 'NAME',
+  fullName: string,
+  phone: string,
+}
+
+export interface ProfileCheckin {
+  eventId: string
+  checkinTimestamp: number,
+  identity: 'PROFILE',
+  idHash: string,
 }
 
 export interface EventSummary extends Event {
@@ -21,13 +29,13 @@ export interface Event {
   time: number  // Epoch
 }
 
-
 /** Retrieves events which start +- 12 hrs from the specified epoch time (default = now) */
 export async function getActiveEvents(now: number = moment.now()): Promise<Event[]> {
   const HALF_DAY_IN_MILLISECONDS = 43200000;
+  const WEEK_IN_MILLISECONDS = 604800000;
   return fs
     .collection('events')
-    .where('time', '>=', now - HALF_DAY_IN_MILLISECONDS)
+    .where('time', '>=', now - WEEK_IN_MILLISECONDS)
     .where('time', '<', now + HALF_DAY_IN_MILLISECONDS)
     .get()
     .then(snapshot => snapshot.docs.map((doc) => doc.data() as Event));
@@ -41,18 +49,26 @@ export async function getEventSummary(event: Event): Promise<EventSummary> {
     .get()
     .then(snapshot => snapshot.docs.map(doc => doc.data() as Checkin));
 
-  const numCheckins = (new Set(checkins.map(checkin => checkin.identifier))).size;
+  const nameCheckins = checkins
+    .filter(checkin => checkin.identity === 'NAME')
+    .map(checkin => (checkin as NameCheckin).fullName);
+
+  const profileCheckins = checkins
+    .filter(checkin => checkin.identity === 'PROFILE')
+    .map(checkin => (checkin as ProfileCheckin).idHash);
+  
+  const numCheckins = (new Set(nameCheckins)).size + (new Set(profileCheckins)).size;
 
   return {eventId: event.eventId, time: event.time, numCheckins};
 }
 
 /** For NRIC. */
-export async function registerCheckin(nric: string, eventId: string, checkinTimestamp: number = moment.now()) {
+export async function registerCheckin(idHash: string, eventId: string, checkinTimestamp: number = moment().unix()) {
   const checkin: Checkin = {
-    identifier: await hash(nric),
+    idHash,
     eventId,
     checkinTimestamp,
-    identity: 'NRIC'
+    identity: 'PROFILE'
   };
   
   await fs
@@ -61,9 +77,9 @@ export async function registerCheckin(nric: string, eventId: string, checkinTime
     .set(checkin);
 }
 
-export async function registerNameCheckin(name: string, phone: string, eventId: string, checkinTimestamp: number = moment.now()) {
+export async function registerNameCheckin(name: string, phone: string, eventId: string, checkinTimestamp: number = moment().unix()) {
   const checkin: Checkin = {
-    identifier: name,
+    fullName: name,
     eventId,
     checkinTimestamp,
     identity: 'NAME',

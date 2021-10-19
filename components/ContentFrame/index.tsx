@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, Image, TouchableWithoutFeedback, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useAssets } from 'expo-asset';
 
 interface ContentFrame {
     onBack?: () => void;
@@ -12,6 +13,20 @@ const ContentFrame: React.FC<ContentFrame> = ({
     backButtonText = 'BACK TO CHECK IN',
     children
 }) => {
+  const [assets] = useAssets([
+    require('@root/assets/images/reach-icon.png'),
+    require('@root/assets/images/keyboard.png'),
+    require('@root/assets/images/sentiment-very-satisfied.png'),
+    require('@root/assets/images/lines-blue.png'),
+    require('@root/assets/images/lines-grey.png'),
+    require('@root/assets/images/contact-phone-blue.png'),
+    require('@root/assets/images/contact-phone-grey.png'),
+  ]);
+
+  if (!assets) {
+    return <Text>Oops</Text>;
+  }
+
     return (
     <View style={styles.root}>
         <View style={{flex: 1}}>
