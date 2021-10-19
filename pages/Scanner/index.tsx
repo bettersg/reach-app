@@ -8,23 +8,22 @@ import {
   View,
   Text,
   TouchableWithoutFeedback,
-  Alert
 } from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
 import Constants from 'expo-constants';
 import LoadingView from '@root/components/LoadingView';
 import { Ionicons } from '@expo/vector-icons';
-import IdScannerCamera, {
-  IdScannerCameraProp,
-} from '@root/components/IdScanner/components/IdScannerCamera';
+import IdScannerCamera from '@root/components/IdScanner/components/IdScannerCamera';
 
 import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useIsFocused } from '@react-navigation/native';
 import validateNric from '@root/utils/validateNric';
 import { registerCheckin } from '@root/utils/events.datastore';
-import { EventContext } from '@root/navigation/providers/EventProvider';
+import { EventContext } from '@root/navigation/providers/CheckinProvider';
+import { getExistingNricProfile } from '@root/utils/profiles.datastore';
+import { hash } from '@root/utils/cryptography';
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
   [BarCodeScanner.Constants.BarCodeType.qr]: { width: 0.7, height: 0.35 },
@@ -67,8 +66,8 @@ const getInterestAreaDimensions = (
 
 type Props = StackScreenProps<RootStackParamList, 'Scanner'>;
 
-export default function Scanner({ navigation, route }: Props) {
-  const { event } = useContext(EventContext);
+export default function Scanner({ navigation }: Props) {
+  const { event, setIdHash, setName } = useContext(EventContext);
   const [enableScanning, setEnableScanning] = useState(true);
   const isFocused = useIsFocused();
   const [platform] = useState<string>(Platform.OS);
@@ -85,6 +84,7 @@ export default function Scanner({ navigation, route }: Props) {
       const { status } = await Camera.requestPermissionsAsync();
       if (status === 'granted') {
         setHasCameraPermission(true);
+        setEnableScanning(true);
       } else {
         onCancel();
       }
@@ -123,15 +123,17 @@ export default function Scanner({ navigation, route }: Props) {
       const nric = barCodeEvent.data;
       const isNricValid = validateNric(nric);
       if (isNricValid) {
-        Alert.alert('NRIC Scanned', `${barCodeEvent.data} has been scanned`, [
-          {
-            text: 'OK',
-            onPress: async () => {
-              registerCheckin(nric, event!);
-              setEnableScanning(true);
-            },
-          },
-        ]);
+        (async () => {
+          if (setIdHash) setIdHash(await hash(nric));
+          registerCheckin(await hash(nric), event!);
+          const existingProfile = await getExistingNricProfile(await hash(nric));
+          if (existingProfile === undefined) {
+            navigation.navigate('ProfileRegistration');
+          } else {
+            if (setName) setName(existingProfile.firstName);
+            navigation.navigate('SuccessfulCheckin');
+          }
+        })();
       }
     }
   };
@@ -215,8 +217,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   keyboard: {
-    position: 'absolute',
-    paddingHorizontal: 380,
+    paddingHorizontal: '50%',
     resizeMode: 'contain'
   },
   container: {

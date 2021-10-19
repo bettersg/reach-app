@@ -3,10 +3,11 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
-import { RootStackParamList, Event } from '@root/types';
+import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SolidButton } from '../components';
 import { TextInput } from 'react-native-paper';
+import { Colors } from '@root/constants';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 const {auth} = initFirebase();
 
@@ -48,7 +49,7 @@ export default function SignupScreen({navigation}: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e93b81',
+    backgroundColor: Colors.primary,
     paddingTop: 50,
     paddingHorizontal: 12
   },

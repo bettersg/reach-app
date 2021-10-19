@@ -8,6 +8,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { TextInput } from 'react-native-paper';
 
 import { SolidButton, } from '../components';
+import { Colors } from '@root/constants';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 const {auth} = initFirebase();
 
@@ -16,8 +17,12 @@ export default function LoginScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
 
   async function onLogin() {
-    if (email !== '' && password !== '') {
-      await auth.signInWithEmailAndPassword(email, password);
+    try {
+      if (email !== '' && password !== '') {
+        await auth.signInWithEmailAndPassword(email, password);
+      }
+    } catch (error: unknown) {
+      navigation.navigate('Signup');
     }
   };
 
@@ -49,7 +54,7 @@ export default function LoginScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e93b81',
+    backgroundColor: Colors.primary,
     paddingTop: 50,
     paddingHorizontal: 12
   },
