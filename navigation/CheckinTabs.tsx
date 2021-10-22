@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Scanner from '@root/pages/Scanner';
 import { createStackNavigator } from '@react-navigation/stack';

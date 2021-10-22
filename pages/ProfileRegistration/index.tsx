@@ -1,19 +1,20 @@
-import React, {useState, useContext, useCallback} from 'react';
+import React, {useState, useContext, useCallback } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { SolidButton, Spacer } from '@root/components';
 import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
-import { registerNameCheckin } from '@root/utils/events.datastore';
 import {EventContext} from '@root/navigation/providers/CheckinProvider';
 import ContentFrame from '@root/components/ContentFrame';
 import OptionalVisibility from '@root/components/OptionalVisibility';
 import { TextInput } from 'react-native-paper';
 import {commonStyles} from '@root/commonStyles';
+import { registerProfile } from '@root/utils/profiles.datastore';
+import moment from 'moment';
 
-type Props = StackScreenProps<RootStackParamList, 'Home'>;
+type Props = StackScreenProps<RootStackParamList, 'ProfileRegistration'>;
 
-export default function CheckinWithContactDetails({ navigation }: Props) {
-  const { event, setName } = useContext(EventContext);
+export default function ProfileRegistration({ navigation }: Props) {
+  const { event, idHash, setName } = useContext(EventContext);
   const [firstName, setFirstName] = useState('');
   const [showFirstNameHint, setShowFirstNameHint] = useState(false);
   const [lastName, setLastName] = useState('');
@@ -21,7 +22,7 @@ export default function CheckinWithContactDetails({ navigation }: Props) {
   const [phone, setPhone] = useState('');
   const [showPhoneHint, setShowPhoneHint] = useState(false);
 
-  const handleOnCheckIn = useCallback(async () => {
+  const handleOnSubmit = useCallback(async () => {
     const firstNameWrong = firstName.length == 0;
     const lastNameWrong = lastName.length == 0;
     const phoneWrong = isNaN(Number(phone)) || phone.length !== 8 || !['6', '8', '9'].includes(phone.slice(0, 1));
@@ -29,20 +30,27 @@ export default function CheckinWithContactDetails({ navigation }: Props) {
     setShowLastNameHint(lastNameWrong);
     setShowPhoneHint(phoneWrong);
     if (!(firstNameWrong || lastNameWrong || phoneWrong)) {
-      await registerNameCheckin(`${firstName} ${lastName}`, phone, event!);
-      if (setName) setName(firstName);
-      navigation.navigate('SuccessfulCheckin');
+        await registerProfile({
+            idHash: idHash!,
+            firstName,
+            lastName,
+            phone,
+            createdAt: moment().unix(),
+
+        });
+        if (setName) setName(firstName);
+        navigation.navigate('SuccessfulCheckin');
     }
     
-  }, [firstName, lastName, event, phone]);
+  }, [firstName, lastName, event, phone, idHash]);
 
 
   return (
     <ContentFrame onBack={() => navigation.navigate('Home')}>
       <View style={commonStyles.thickPad}>
+        <Text style={commonStyles.actionText}>We noticed that you&apos;re new here!</Text>
         <Text style={commonStyles.actionText}>Enter your name and contact details</Text>
-      </View>
-      <View style={commonStyles.thickPad}>
+        <Spacer height={50}/>
         <View style={styles.nameInputContainer}>
           <View style={{flex: 3, paddingRight: 5}}>
             <TextInput
@@ -66,7 +74,7 @@ export default function CheckinWithContactDetails({ navigation }: Props) {
         />
         <OptionalVisibility isVisible={showPhoneHint}><Text style={commonStyles.hintText}>Enter a valid phone number</Text></OptionalVisibility>
         <Spacer/>
-        <SolidButton label={'CHECK IN'} onPress={handleOnCheckIn} />
+        <SolidButton label={'SUBMIT'} onPress={handleOnSubmit} />
       </View>
       <View style={{flex: 3}}/>
     </ContentFrame>

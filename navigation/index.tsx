@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { AuthenticatedUserProvider } from './providers/AuthenticatedUserProvider';
+import { CheckinProvider } from './providers/CheckinProvider';
 import RootStack from './RootStack';
-import {EventProvider} from './providers/EventProvider';
 
 /**
  * Wrap all providers here
@@ -10,10 +9,8 @@ import {EventProvider} from './providers/EventProvider';
 
 export default function Routes() {
     return (
-        <AuthenticatedUserProvider>
-            <EventProvider>
-                <RootStack />
-            </EventProvider>
-        </AuthenticatedUserProvider>
+        <CheckinProvider>
+            <RootStack />
+        </CheckinProvider>
     );
 }

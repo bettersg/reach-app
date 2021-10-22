@@ -5,7 +5,7 @@ type Props = {
   height?: number;
 };
 
-const Spacer = ({ height = 10 }: Props) => {
+const Spacer = ({ height = 20 }: Props) => {
   return <View style={[styles.root, { height }]} />;
 };
 
