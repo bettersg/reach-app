@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { AuthenticatedUserProvider } from './providers/AuthenticatedUserProvider';
-import RootNavigator from './RootNavigator';
-import {CheckinProvider} from './providers/CheckinProvider';
+import { CheckinProvider } from './providers/CheckinProvider';
+import RootStack from './RootStack';
 
 /**
  * Wrap all providers here
@@ -10,10 +9,8 @@ import {CheckinProvider} from './providers/CheckinProvider';
 
 export default function Routes() {
     return (
-        <AuthenticatedUserProvider>
-            <CheckinProvider>
-                <RootNavigator />
-            </CheckinProvider>
-        </AuthenticatedUserProvider>
+        <CheckinProvider>
+            <RootStack />
+        </CheckinProvider>
     );
 }
