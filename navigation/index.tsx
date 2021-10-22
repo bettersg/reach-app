@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { AuthenticatedUserProvider } from './providers/AuthenticatedUserProvider';
-import RootNavigator from './RootNavigator';
+import RootStack from './RootStack';
 import {EventProvider} from './providers/EventProvider';
 
 /**
@@ -12,7 +12,7 @@ export default function Routes() {
     return (
         <AuthenticatedUserProvider>
             <EventProvider>
-                <RootNavigator />
+                <RootStack />
             </EventProvider>
         </AuthenticatedUserProvider>
     );
