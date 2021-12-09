@@ -1,0 +1,1 @@
+export const bob = [1, 2, 3];
