@@ -1,4 +1,5 @@
 {
+    "moduleResolution": "node",
     "compileOnSave": true,
     "compilerOptions": {
         "baseUrl": ".",
@@ -13,8 +14,8 @@
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "paths": {
-            "@root/*": ["./*"]
+            "@root/*": ["src/*"]
         }
     },
-    "include": ["src/*"]
+    "include": ["src"]
 }

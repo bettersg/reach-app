@@ -1,6 +1,6 @@
 import fs from 'fs';
 import * as functions from '@root/index';
-import { logger } from '@root/utils/logger';
+import { logger } from '@root/logger';
 
 const stringBuilder = [];
 let key: keyof typeof functions;
