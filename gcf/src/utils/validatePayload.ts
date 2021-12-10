@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import { createTtError } from '@root/errors';
+import { createError } from '@root/errors';
 import { logger } from '@root/logger';
 
 // TODO - openapi generated
@@ -33,7 +33,7 @@ export function validatePayload<T>(payload: unknown, schema: Schema): T {
         if (ajv.errors) {
             logger.error(ajv.errorsText(ajv.errors));
         }
-        throw createTtError('INVALID_FIELD');
+        throw createError('INVALID_FIELD');
     }
 
     return payload as T;

@@ -2,7 +2,7 @@ import { createSandbox, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import { logger } from '@root/logger';
 import { describeUnitTestsFor } from '@root/testUtils/describe';
-import { createTtError, GENERAL_ERRORS, wrapInHttpsError } from '..';
+import { createError, GENERAL_ERRORS, wrapInHttpsError } from '..';
 
 describeUnitTestsFor(wrapInHttpsError.name, () => {
     const sandbox = createSandbox();
@@ -29,7 +29,7 @@ describeUnitTestsFor(wrapInHttpsError.name, () => {
 
     it('Should allow http errors thrown in an async function to pass', async () => {
         await expect(
-            wrapInHttpsError(async () => Promise.reject(createTtError('RATE_LIMIT')))()
+            wrapInHttpsError(async () => Promise.reject(createError('RATE_LIMIT')))()
         ).to.eventually.be.rejectedWith(GENERAL_ERRORS.RATE_LIMIT.message);
     });
 });

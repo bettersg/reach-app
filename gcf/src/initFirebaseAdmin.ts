@@ -1,7 +1,7 @@
 import { logger } from '@root/logger';
 import * as admin from 'firebase-admin';
 
-export interface TtFirebaseResources {
+export interface FirebaseResources {
     admin: admin.app.App;
     fs: admin.firestore.Firestore;
     auth: admin.auth.Auth;
@@ -9,10 +9,10 @@ export interface TtFirebaseResources {
     messaging: admin.messaging.Messaging;
 }
 
-let resources: TtFirebaseResources | undefined;
+let resources: FirebaseResources | undefined;
 
 /** Ensures we use only single connection to each Firebase resource */
-export function initFirebaseAdmin(): TtFirebaseResources {
+export function initFirebaseAdmin(): FirebaseResources {
     if (!admin.apps.length || !resources) {
         logger.info('Cold start - Initializing firebase admin.');
         const app = admin.initializeApp({

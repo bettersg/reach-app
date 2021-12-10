@@ -1,3 +1,4 @@
+import { RequestContext } from '@root/request/makeRequestClient/request.types';
 import { LogEntry } from 'firebase-functions/logger';
 
 // Define additonal properties schema here
@@ -16,10 +17,7 @@ interface LogRequestContext {
     namespace: 'requestContext';
     properties: RequestContext;
 }
-interface LogConsentPrivacyStatement {
-    namespace: 'consentPrivacyStatement';
-    properties: { uid: string; ttId: string };
-}
+
 interface LogProcessUploadedData {
     namespace: 'processUploadedData';
     properties: { errorMessage: string; filePath: string; stackTrace: any };
@@ -28,7 +26,6 @@ interface LogProcessUploadedData {
 type AdditionalProperties =
     | LogRequestContext
     | LogProcessUploadedData
-    | LogConsentPrivacyStatement
     | LogRateLimiterMetrics;
 
 export type Log = (message?: any, additionalProperties?: AdditionalProperties) => void;

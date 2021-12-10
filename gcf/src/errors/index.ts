@@ -9,7 +9,7 @@ export interface ErrorDetails {
     message: string;
 }
 
-export function createError<T extends Readonly<{ [errorCode: string]: ErrorDetails }>>(
+export function createErrorFromEnumeration<T extends Readonly<{ [errorCode: string]: ErrorDetails }>>(
     errorMap: T
 ) {
     return function (error: keyof T) {
@@ -23,15 +23,11 @@ export function createError<T extends Readonly<{ [errorCode: string]: ErrorDetai
 export const GENERAL_ERRORS = {
     INTERNAL: {
         code: 'internal',
-        message: 'TT backend has an unexpected problem.',
+        message: 'Backend has an unexpected problem.',
     },
     INVALID_FIELD: {
         code: 'invalid-argument',
-        message: 'Request data did not meet TT backend validation',
-    },
-    INVALID_TTID: {
-        code: 'permission-denied',
-        message: 'invalid user',
+        message: 'Request data did not meet backend validation',
     },
     RATE_LIMIT: {
         code: 'resource-exhausted',
@@ -39,7 +35,7 @@ export const GENERAL_ERRORS = {
     },
     DENIED: {
         code: 'permission-denied',
-        message: 'TT backend denies your access to this resource.',
+        message: 'Backend denies your access to this resource.',
     },
 } as const;
 
@@ -47,7 +43,7 @@ export const GENERAL_ERRORS = {
  * Light wrapper around firebase's HttpsError class - to enforce standardization of details and default logging.
  * @param error string, used as key for our enumerated errors.
  */
-export const createTtError = createError(GENERAL_ERRORS);
+export const createError = createErrorFromEnumeration(GENERAL_ERRORS);
 
 /** Used to wrap around Cloud Functions, to ensure we only return HttpsError to clients. */
 export function wrapInHttpsError<T extends (...args: any[]) => Promise<any>>(
@@ -63,7 +59,7 @@ export function wrapInHttpsError<T extends (...args: any[]) => Promise<any>>(
             } else {
                 logger.error([`${handler.name} execution failed with unhandleable error: `, error]);
                 captureException(error);
-                errorToThrow = createTtError('INTERNAL');
+                errorToThrow = createError('INTERNAL');
             }
 
             throw errorToThrow;
