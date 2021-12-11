@@ -22,8 +22,8 @@ module.exports = {
     target: 'node',
     mode: 'production',
     entry: {
-        index: './src/index.ts',
-        deploy: './src/deploy.ts',
+        index: path.resolve(__dirname, 'src/index.ts'),
+        deploy: path.resolve(__dirname, 'src/deploy.ts'),
     },
     devtool: 'source-map',
     optimization: {
@@ -61,8 +61,9 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.ts?$/,
                 loader: 'ts-loader',
+                include: path.resolve(__dirname, 'src'),
                 exclude: /node_modules/,
                 options: {
                     configFile: 'tsconfig.build.json',
@@ -71,7 +72,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js', '.json'],
+        extensions: ['.ts', '.js', '.json'],
         alias: {
             '@root': path.resolve(__dirname, 'src'),
         },

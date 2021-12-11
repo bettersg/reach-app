@@ -1,7 +1,6 @@
 import * as functions from 'firebase-functions';
 import { logger } from '@root/logger';
 import { HttpsError } from 'firebase-functions/lib/providers/https';
-import { captureException } from '@sentry/serverless';
 import { AsyncReturnType } from '@root/utils/utils.types';
 
 export interface ErrorDetails {
@@ -58,7 +57,6 @@ export function wrapInHttpsError<T extends (...args: any[]) => Promise<any>>(
                 errorToThrow = error;
             } else {
                 logger.error([`${handler.name} execution failed with unhandleable error: `, error]);
-                captureException(error);
                 errorToThrow = createError('INTERNAL');
             }
 

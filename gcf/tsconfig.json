@@ -17,5 +17,5 @@
             "@root/*": ["src/*"]
         }
     },
-    "include": ["src"]
+    "include": ["src/**/*.ts", "src/**/*.json"]
 }

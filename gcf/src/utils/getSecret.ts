@@ -32,3 +32,5 @@ const { cachedFunction: getSecret, clearCache: clearSecretCache } =
     cacheWithExpiry(getSecretRemotely);
 
 export { getSecret, clearSecretCache };
+
+getSecretRemotely('auth-key-default').then(s => console.log(s))

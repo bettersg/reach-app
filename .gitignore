@@ -12,7 +12,7 @@ app/web-build/
 
 # Credentials
 *.key
-.local-key.json
+*-key.json
 
 # Logging / Debug
 *.log

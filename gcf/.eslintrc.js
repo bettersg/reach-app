@@ -28,13 +28,7 @@ module.exports = {
                         importNames: ['SecretManagerServiceClient'],
                         message:
                             'Please use: import { getSecret } from "@tt/gcp/utils/secretManager/getSecret"',
-                    },
-                    {
-                        name: 'aws-sdk',
-                        importNames: ['SecretsManager'],
-                        message:
-                            'Please use: import { getAwsSecret } from "@tt/gcp/utils/secretManager/getSecret"',
-                    },
+                    }
                 ],
             },
         ],
