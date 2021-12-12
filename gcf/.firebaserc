@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "prd": "better-sg-attendance",
+    "stg": "better-sg-attendance-stg"
+  }
+}

@@ -1,16 +1,18 @@
-node_modules/
-.expo/
-*.jks
-*.p8
-*.p12
-*.mobileprovision
-*.orig.*
-web-build/
+**/node_modules/
 .idea
+
+# app
+app/.expo/
+app/*.jks
+app/*.p8
+app/*.p12
+app/*.mobileprovision
+app/*.orig.*
+app/web-build/
 
 # Credentials
 *.key
-.local-key.json
+*-key.json
 
 # Logging / Debug
 *.log
@@ -18,3 +20,6 @@ npm-debug.*
 
 # macOS
 **/.DS_Store
+
+# Generated files
+**/lib
