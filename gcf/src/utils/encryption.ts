@@ -14,11 +14,11 @@ function makeAesEncryptor(keySecretName: string): Encryption {
         const cipher = crypto.createCipheriv(AES_DEFAULT_ALGO, Buffer.from(key, 'base64'), iv, {
             authTagLength: AES_AUTH_TAG_LENGTH,
         });
-    
+
         const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
         const outputBuffer = Buffer.concat([ciphertext, iv, cipher.getAuthTag()]);
         return outputBuffer.toString('base64');
-    }
+    };
 
     const aesDecrypt: DecryptWrapper = async (b64Cipher, outputEncoding) => {
         const key = await getSecret(keySecretName);
@@ -33,18 +33,19 @@ function makeAesEncryptor(keySecretName: string): Encryption {
         ciphertextWithEncoding.copy(iv, 0, ciphertext.length);
         const authTag = Buffer.alloc(AES_AUTH_TAG_LENGTH);
         ciphertextWithEncoding.copy(authTag, 0, ciphertext.length + iv.length);
-    
+
         const decipher = crypto.createDecipheriv(AES_DEFAULT_ALGO, Buffer.from(key, 'base64'), iv);
         decipher.setAuthTag(authTag);
-        return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString(outputEncoding);
-    }
+        return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString(
+            outputEncoding
+        );
+    };
 
     return {
         encrypt: aesEncrypt,
         decrypt: aesDecrypt,
-    }
-    
-};
+    };
+}
 
 export function calculateHash(input: string, encoding: HexBase64Encoding = 'base64') {
     return crypto.createHash('sha256').update(input).digest(encoding);

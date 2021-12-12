@@ -3,7 +3,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { logger } from '@root/logger';
 import { createError } from '../errors';
 
-export type ApiKeyName = 
+export type ApiKeyName =
     | 'auth-key-default' // For developers
     | 'auth-key-other';
 

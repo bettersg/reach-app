@@ -23,10 +23,7 @@ interface LogProcessUploadedData {
     properties: { errorMessage: string; filePath: string; stackTrace: any };
 }
 
-type AdditionalProperties =
-    | LogRequestContext
-    | LogProcessUploadedData
-    | LogRateLimiterMetrics;
+type AdditionalProperties = LogRequestContext | LogProcessUploadedData | LogRateLimiterMetrics;
 
 export type Log = (message?: any, additionalProperties?: AdditionalProperties) => void;
 

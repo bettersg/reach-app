@@ -5,7 +5,12 @@ import { describeUnitTestsFor } from '@root/testUtils/describe';
 import { logger } from '@root/logger';
 import { isEqual } from 'lodash';
 import { RequestContext } from '../request.types';
-import { ApiRequestNoResponseError, ApiRequestResponseError, ApiRequestResponseValidationError, ApiRequestSetupError } from '../request.errors';
+import {
+    ApiRequestNoResponseError,
+    ApiRequestResponseError,
+    ApiRequestResponseValidationError,
+    ApiRequestSetupError,
+} from '../request.errors';
 import { makeRequestClient } from '..';
 
 describeUnitTestsFor('apiRequest', () => {

@@ -36,9 +36,7 @@ describeUnitTestsFor(assertApiKey.name, function () {
             'auth-key-other',
             'auth-key-default',
         ]);
-        await assertApiKey(createFakeCallableContext('auth-key-other_secret2'), [
-            'auth-key-other',
-        ]);
+        await assertApiKey(createFakeCallableContext('auth-key-other_secret2'), ['auth-key-other']);
     });
 
     it('should handle key names with under_scores', async () => {
@@ -57,9 +55,7 @@ describeUnitTestsFor(assertApiKey.name, function () {
 
     it('should throw error if key is correct but not valid', async () => {
         await expect(
-            assertApiKey(createFakeCallableContext('auth-key-other_secret2'), [
-                'auth-key-default',
-            ])
+            assertApiKey(createFakeCallableContext('auth-key-other_secret2'), ['auth-key-default'])
         ).to.be.rejected;
     });
 
@@ -72,7 +68,7 @@ describeUnitTestsFor(assertApiKey.name, function () {
     });
 
     it('should throw error if key is not provided', async () => {
-        await expect(assertApiKey(createFakeCallableContext(undefined), ['auth-key-default'])).to
-            .be.rejected;
+        await expect(assertApiKey(createFakeCallableContext(undefined), ['auth-key-default'])).to.be
+            .rejected;
     });
 });

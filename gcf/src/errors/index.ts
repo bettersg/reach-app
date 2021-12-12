@@ -8,9 +8,9 @@ export interface ErrorDetails {
     message: string;
 }
 
-export function createErrorFromEnumeration<T extends Readonly<{ [errorCode: string]: ErrorDetails }>>(
-    errorMap: T
-) {
+export function createErrorFromEnumeration<
+    T extends Readonly<{ [errorCode: string]: ErrorDetails }>
+>(errorMap: T) {
     return function (error: keyof T) {
         const details = error;
         const { code, message } = errorMap[error] as ErrorDetails;

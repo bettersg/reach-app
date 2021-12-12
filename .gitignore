@@ -20,3 +20,6 @@ npm-debug.*
 
 # macOS
 **/.DS_Store
+
+# Generated files
+**/lib
