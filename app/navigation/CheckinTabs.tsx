@@ -23,8 +23,8 @@ const screenOptions = ({ route }: { route: any}) => ({
 function Nric() {
   return (
   <NricStack.Navigator>
-    <NricStack.Screen name="Scanner" component={Scanner} options={{ headerShown: false }}/>
     <NricStack.Screen name="ManualInput" component={ManualInput} options={{ headerShown: false }} />
+    <NricStack.Screen name="Scanner" component={Scanner} options={{ headerShown: false }}/>
   </NricStack.Navigator>);
 }
 

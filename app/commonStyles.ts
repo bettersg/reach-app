@@ -19,7 +19,7 @@ export function normalize(mobileSize: number, iPadSize: number) {
 export const commonStyles = StyleSheet.create({
     thickPad: {
       paddingHorizontal: normalize(20, 80),
-      paddingVertical: normalize(30, 30),
+      paddingVertical: normalize(20, 30),
       alignItems: 'center',
     },
     hintText: {

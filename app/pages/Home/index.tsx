@@ -1,4 +1,4 @@
-import React, {useCallback, useContext} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import { Image, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -10,7 +10,15 @@ import { commonStyles } from '@root/commonStyles';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function Home({ navigation }: Props) {
-  const { event, setEvent } = useContext(EventContext);
+  const { setEvent, setFirstName, setLastName, setIdHash } = useContext(EventContext);
+
+  // Reset state
+  useEffect(() => {
+    setFirstName!(undefined);
+    setLastName!(undefined);
+    setIdHash!(undefined);
+    setEvent!(undefined);
+  }, []);
 
   async function handleDropIn() {
     if (!setEvent) return;

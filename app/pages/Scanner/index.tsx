@@ -20,9 +20,7 @@ import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useIsFocused } from '@react-navigation/native';
 import validateNric from '@root/utils/validateNric';
-import { registerCheckin } from '@root/utils/events.datastore';
 import { EventContext } from '@root/navigation/providers/CheckinProvider';
-import { getExistingNricProfile } from '@root/utils/profiles.datastore';
 import { hash } from '@root/utils/cryptography';
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
@@ -67,7 +65,7 @@ const getInterestAreaDimensions = (
 type Props = StackScreenProps<RootStackParamList, 'Scanner'>;
 
 export default function Scanner({ navigation }: Props) {
-  const { event, setIdHash, setName } = useContext(EventContext);
+  const { event, setIdHash } = useContext(EventContext);
   const [enableScanning, setEnableScanning] = useState(true);
   const isFocused = useIsFocused();
   const [platform] = useState<string>(Platform.OS);
@@ -125,14 +123,7 @@ export default function Scanner({ navigation }: Props) {
       if (isNricValid) {
         (async () => {
           if (setIdHash) setIdHash(await hash(nric));
-          registerCheckin(await hash(nric), event!);
-          const existingProfile = await getExistingNricProfile(await hash(nric));
-          if (existingProfile === undefined) {
-            navigation.navigate('ProfileRegistration');
-          } else {
-            if (setName) setName(existingProfile.firstName);
-            navigation.navigate('SuccessfulCheckin');
-          }
+          navigation.navigate('ProfileRegistration', {needsNric: false});
         })();
       }
     }
