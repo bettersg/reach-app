@@ -9,7 +9,7 @@ import OptionalVisibility from '@root/components/OptionalVisibility';
 import { TextInput } from 'react-native-paper';
 import {commonStyles} from '@root/commonStyles';
 import { registerProfile } from '@root/utils/profiles.datastore';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 type Props = StackScreenProps<RootStackParamList, 'ProfileRegistration'>;
 

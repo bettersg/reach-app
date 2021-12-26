@@ -1,71 +1,58 @@
-import React, { useEffect, useContext, useState} from 'react';
-import { TouchableOpacity, Text, FlatList } from 'react-native';
-import { RootStackParamList } from '@root/types';
-import { StackScreenProps } from '@react-navigation/stack';
-import EventDetailRow from '@root/pages/History/components/EventDetailRow';
-import { Checkin, EventSummary, getActiveEvents, getEventCheckins, getEventSummary } from '@root/utils/events.datastore';
-import {EventContext} from '@root/navigation/providers/CheckinProvider';
 import ContentFrame from '@root/components/ContentFrame';
-import CheckinRow from './components/CheckinRow';
-import { commonStyles } from '@root/commonStyles';
+import { RootStackParamList, Event } from '@root/types';
+import { StackScreenProps } from '@react-navigation/stack';
+import {EventContext} from '@root/navigation/providers/CheckinProvider';
+import React, { useState, useContext } from 'react';
+import {Calendar} from 'react-native-calendars';
+import moment from 'moment-timezone';
+import { EventSummary, getEventsOnDate, getEventSummary } from '@root/utils/events.datastore';
 import { Spacer } from '@root/components';
+import { FlatList } from 'react-native';
+import EventDetailRow from './components/EventDetailRow';
+import { Colors } from '@root/constants';
+
 type Props = StackScreenProps<RootStackParamList, 'History'>;
 
-export default function History({ navigation }: Props) {
-  const { events, setEvents, event, setEvent } = useContext(EventContext);
-  const [checkins, setCheckins] = useState<Checkin[] | null>(null);
-
-
-  useEffect(() => {
-    if (setEvent) setEvent(undefined);
-  }, []);
-
-  /**
-   * Fetch the event details list.
-   */
-  useEffect(() => {
-    (async () => {
-      if (event === undefined) { // General overview
-        const activeEvents = await getActiveEvents();
-        const eventSummaries = await Promise.all(activeEvents.map(event => getEventSummary(event)));
-        if (setEvents) setEvents(eventSummaries);
-      } else { // Zoom in on one event
-        setCheckins(await getEventCheckins(event));
-      }
-    })();
-  }, [event]);
+export default function MyCalendar({ navigation }: Props) {
+  const { events, setEvents } = useContext(EventContext);
+  const [selectedDate, setSelectedDate] = useState(moment());
 
   const renderEventRow = ({ item }: { item: EventSummary }) => (
     <EventDetailRow
       title={item.eventId}
       totalScanned={item.numCheckins}
-      onPress={() => {
-        if (setEvent) setEvent(item.eventId);
-      }}
     />
   );
 
-  return !!event ? (
-    <ContentFrame onBack={() => navigation.navigate('Home')}>
-      <TouchableOpacity onPress={() => setEvent!(undefined)}>
-        <Text style={commonStyles.actionText}>{event}</Text>
-      </TouchableOpacity>
-      <Spacer/>
-      <FlatList
-          data={checkins}
-          renderItem={(checkin) => <CheckinRow checkin={checkin.item} />}
-          keyExtractor={(item) => `${item.checkinTimestamp}`}
-      />
-    </ContentFrame>
-  ): (
-    <ContentFrame onBack={() => navigation.navigate('Home')}>
-      <Text style={commonStyles.actionText}>Recent events</Text>
-      <Spacer/>
+  async function renderEventsOnDate(selectedMoment: moment.Moment) {
+    const events = await getEventsOnDate(selectedMoment);
+    const eventSummaries = await Promise.all(events.map(event => getEventSummary(event)));
+    if (setEvents) setEvents(eventSummaries);
+  }
+  getEventsOnDate;
+
+  return <ContentFrame onBack={() => navigation.navigate('Home')}>
+    <Calendar
+      onDayPress={async (day) => {
+        const selectedMoment = moment.tz(day.dateString, 'Asia/Singapore');
+        setSelectedDate(selectedMoment);
+        await renderEventsOnDate(selectedMoment);
+      }}
+      markedDates={{
+        [selectedDate.format('YYYY-MM-DD')]: {
+          selected: true,
+          disableTouchEvent: true,
+          selectedColor: Colors.primary,
+          selectedTextColor: '#FFFFFF',
+        },
+      }}
+      monthFormat={'yyyy MMM'}
+    />
+    <Spacer/>
       <FlatList
         data={events}
         renderItem={renderEventRow}
         keyExtractor={(item) => item.eventId}
       />
-    </ContentFrame>
-  ); 
+  </ContentFrame>;
 }

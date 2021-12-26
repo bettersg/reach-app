@@ -4,7 +4,7 @@ import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { createOrGetEvent } from '@root/utils/events.datastore';
 import {EventContext} from '@root/navigation/providers/CheckinProvider';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import ContentFrame from '@root/components/ContentFrame';
 import { commonStyles } from '@root/commonStyles';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;

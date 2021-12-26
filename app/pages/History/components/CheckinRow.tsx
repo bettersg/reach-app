@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import {Checkin, NameCheckin, ProfileCheckin} from '@root/utils/events.datastore';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { getExistingNricProfile } from '@root/utils/profiles.datastore';
 
 type Props = {

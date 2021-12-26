@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
 type Props = {
   title: string;
   totalScanned: number;
-  onPress: (eventId: string) => void;
+  onPress?: (eventId: string) => void;
 };
 
 const EventDetailRow = ({ title, totalScanned, onPress }: Props) => {

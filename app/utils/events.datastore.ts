@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { initFirebase } from './initFirebaseApp';
 
 const {fs} = initFirebase();
@@ -118,4 +118,13 @@ export async function createOrGetEvent(eventId: string) {
         await eventRef.set(event);
       }
     });
+}
+
+export async function getEventsOnDate(date: moment.Moment): Promise<Event[]> {
+  return fs
+      .collection('events')
+      .where('time', '>=', date.startOf('day').unix()* 1000)
+      .where('time', '<=', date.endOf('day').unix() * 1000)
+      .get()
+      .then((snapshot) => snapshot.docs.map((doc) => doc.data() as Event));
 }
