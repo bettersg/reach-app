@@ -7,7 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
-    "lint": "eslint --quiet --fix --ext .ts,.tsx ."
+    "lint:fix": "eslint --quiet --fix --ext .ts,.tsx,.js ."
   },
   "jest": {
     "preset": "jest-expo"
@@ -22,6 +22,7 @@
     "expo-asset": "~8.3.2",
     "expo-barcode-scanner": "~10.2.2",
     "expo-camera": "~11.2.2",
+    "expo-cli": "^5.0.3",
     "expo-constants": "~11.0.1",
     "expo-crypto": "~9.2.0",
     "expo-font": "~9.2.1",

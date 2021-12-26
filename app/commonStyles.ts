@@ -1,21 +1,52 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, PixelRatio, Dimensions } from 'react-native';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+// https://developer.apple.com/library/archive/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Displays/Displays.html
+// Specify the desired size on iPhone 10 and iPad, receive the relevant size
+export function normalize(mobileSize: number, iPadSize: number) {
+    const isMobile = SCREEN_WIDTH < 450;
+
+    if (isMobile) {
+        const scale = SCREEN_WIDTH / 375;
+        return Math.round(PixelRatio.roundToNearestPixel(mobileSize * scale));
+    } else {
+        const scale = SCREEN_WIDTH / 834;
+        return Math.round(PixelRatio.roundToNearestPixel(iPadSize * scale));
+    }
+}
 
 export const commonStyles = StyleSheet.create({
     thickPad: {
-      paddingHorizontal: 80,
-      paddingVertical: 20,
+      paddingHorizontal: normalize(20, 80),
+      paddingVertical: normalize(30, 30),
       alignItems: 'center',
     },
     hintText: {
-      padding: 10,
-      color: 'red',
+        fontSize: normalize(10, 12),
+        padding: normalize(5, 10),
+        color: 'red',
     },
     actionText: {
-        fontSize: 36, 
+        fontSize: normalize(24, 36), 
         alignItems: 'center', 
         justifyContent: 'center', 
         textAlign: 'center',
         width: '100%',
+    },
+    mainButtonText: {
+      fontSize: normalize(15, 18),
+      textAlign: 'left'
+    },
+    menuButton: {
+        borderStyle: 'solid', 
+        borderWidth: 2, 
+        borderColor: '#DDDDDD', 
+        width: normalize(350, 450), 
+        height: normalize(80, 120), 
+        justifyContent: 'center', 
+        flexDirection: 'row', 
+        alignItems: 'center' 
     }
-  });
+});
   

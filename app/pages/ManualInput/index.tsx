@@ -44,21 +44,10 @@ export default function ManualInput({ navigation }: Props) {
       </View>
       <View style={commonStyles.thickPad}>
         <TextInput label={'NRIC'} onChangeText={setNric} style={{width: '100%'}}/>
-        <OptionalVisibility isVisible={showNricHint}><Text style={styles.hintText}>Enter a valid NRIC</Text></OptionalVisibility>
+        <OptionalVisibility isVisible={showNricHint}><Text style={commonStyles.hintText}>Enter a valid NRIC</Text></OptionalVisibility>
         <Spacer/>
         <SolidButton label={'CHECK IN'} onPress={handleOnCheckIn} />
       </View>
     </ContentFrame>
   );
 }
-
-const styles = StyleSheet.create({
-  topContainer: {
-    paddingHorizontal: 250,
-    paddingVertical: 20,
-  },
-  hintText: {
-    padding: 10,
-    color: 'red'
-  }
-});

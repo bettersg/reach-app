@@ -2,6 +2,7 @@ import React, { FunctionComponent, ReactElement } from 'react';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { View, StyleSheet, Text } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { normalize } from '@root/commonStyles';
 
 const styles = StyleSheet.create({
   labelWrapper: {
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
   },
   labelText: {
     color: 'white',
-    fontSize: 36,
+    fontSize: normalize(20, 36),
   },
 });
 
