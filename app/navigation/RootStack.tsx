@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Home from '@root/pages/Home';
@@ -10,18 +10,42 @@ import ProfileRegistration from '@root/pages/ProfileRegistration';
 import ScannerFromCheckin from '@root/pages/Scanner/fromCheckin';
 import ScannerFromRegistration from '@root/pages/Scanner/fromRegistration';
 import CheckinWithNric from '@root/pages/CheckinWithNric';
+import { AuthenticatedUserContext } from './providers/AuthenticatedUserProvider';
+import { LoadingView } from '@root/components';
+import AuthStack from './AuthStack';
 
 const {auth} = initFirebase();
 const Stack = createStackNavigator();
 
 export default function RootStack() {
+  const { user, setUser } = useContext(AuthenticatedUserContext);
+  const [isLoading, setIsLoading] = useState(true);
+  
   useEffect(() => {
-    (async () => await auth.signInWithEmailAndPassword('any_email@gmail.com', 'anypassword'))();
+    // onAuthStateChanged returns an unsubscriber
+    const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
+      try {
+        if (setUser) setUser(authenticatedUser);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    // unsubscribe auth listener on unmount
+    return unsubscribeAuth;
   }, []);
+
+  if (isLoading) return <LoadingView/>;
+
+  // useEffect(() => {
+  //   (async () => await auth.signInWithEmailAndPassword('any_email@gmail.com', 'anypassword'))();
+  // }, []);
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+        {user ? (
+        <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
         <Stack.Screen name="CheckinTabs" component={CheckinTabs} options={{ headerShown: false }}/>
         <Stack.Screen name="History" component={History} options={{ headerShown: false }}/>
@@ -31,6 +55,9 @@ export default function RootStack() {
         <Stack.Screen name="ScannerFromCheckin" component={ScannerFromCheckin} options={{ headerShown: false }} />
         <Stack.Screen name="ScannerFromRegistration" component={ScannerFromRegistration} options={{ headerShown: false }} />
       </Stack.Navigator>
+      ) : (
+        <AuthStack />
+      )}
     </NavigationContainer>
   );
 }

@@ -39,7 +39,6 @@ export default function CheckinWithNric({ navigation }: Props) {
       <View style={commonStyles.thickPad}>
         <SolidButton label={'CHECK IN'} onPress={handleOnCheckIn} />
       </View>
-      
     </ContentFrame>
   );
 }

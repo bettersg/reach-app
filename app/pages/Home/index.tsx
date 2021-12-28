@@ -10,9 +10,11 @@ import { commonStyles } from '@root/commonStyles';
 import { useFocusEffect } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Spacer } from '@root/components';
+import { AuthenticatedUserContext } from '@root/navigation/providers/AuthenticatedUserProvider';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function Home({ navigation }: Props) {
+  const { user } = useContext(AuthenticatedUserContext);
   const { setEvent, setFirstName, setLastName, setIdHash, setPhone } = useContext(EventContext);
   const [seeDropdown, setSeeDropdown] = useState(false);
 
@@ -36,6 +38,7 @@ export default function Home({ navigation }: Props) {
 
   // Reset state upon reaching Home
   useFocusEffect(useCallback(() => {
+    console.log(user!.uid);
     setFirstName!(undefined);
     setLastName!(undefined);
     setIdHash!(undefined);

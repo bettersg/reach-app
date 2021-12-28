@@ -7,8 +7,10 @@ import { RootStackParamList, Event } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TextInput } from 'react-native-paper';
 
-import { SolidButton, } from '../components';
+import { SolidButton, Spacer, } from '../components';
 import { Colors } from '@root/constants';
+import { commonStyles } from '@root/commonStyles';
+import { WhitespaceButton } from '@root/components/SolidButton';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 const {auth} = initFirebase();
 
@@ -27,25 +29,29 @@ export default function LoginScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar/>
-      <Text style={styles.title}>Login. Temporary step for Firebase backend.</Text>
+    <View style={{...commonStyles.thickPad, backgroundColor: 'white'}}>
+      <Spacer height={50}/>
+      <Text style={commonStyles.actionText}>Log in to your account</Text>
+      <Spacer height={50}/>
       <TextInput
         label={'Enter email'}
         onChangeText={setEmail}
+        style={{width:'100%'}}
       />
+      <Spacer height={20}/>
       <TextInput
         label={'Enter password'}
         onChangeText={setPassword}
+        style={{width:'100%'}}
       />
+      <Spacer height={30}/>
       <SolidButton
         onPress={onLogin}
         label='Login'
       />
-      <RNButton
+      <WhitespaceButton
         onPress={() => navigation.navigate('Signup')}
-        title='Go to Signup'
-        color='#fff'
+        label='GO TO SIGNUP'
       />
     </View>
   );
@@ -61,7 +67,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '600',
-    color: '#fff',
+    color: 'black',
     alignSelf: 'center',
     paddingBottom: 24
   }

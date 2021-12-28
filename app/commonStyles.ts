@@ -21,6 +21,7 @@ export const commonStyles = StyleSheet.create({
       paddingHorizontal: normalize(20, 80),
       paddingVertical: normalize(20, 30),
       alignItems: 'center',
+      height: '100%'
     },
     hintText: {
         fontSize: normalize(10, 12),
