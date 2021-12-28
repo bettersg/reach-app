@@ -6,8 +6,10 @@ import History from '@root/pages/History';
 import SuccessfulCheckin from '@root/pages/SuccessfulCheckin';
 import CheckinTabs from './CheckinTabs';
 import { initFirebase } from '@root/utils/initFirebaseApp';
-import ManualInput from '@root/pages/ManualInput';
 import ProfileRegistration from '@root/pages/ProfileRegistration';
+import ScannerFromCheckin from '@root/pages/Scanner/fromCheckin';
+import ScannerFromRegistration from '@root/pages/Scanner/fromRegistration';
+import CheckinWithNric from '@root/pages/CheckinWithNric';
 
 const {auth} = initFirebase();
 const Stack = createStackNavigator();
@@ -24,8 +26,10 @@ export default function RootStack() {
         <Stack.Screen name="CheckinTabs" component={CheckinTabs} options={{ headerShown: false }}/>
         <Stack.Screen name="History" component={History} options={{ headerShown: false }}/>
         <Stack.Screen name="SuccessfulCheckin" component={SuccessfulCheckin} options={{ headerShown: false }} />
-        <Stack.Screen name="ManualInput" component={ManualInput} options={{ headerShown: false }} />
+        <Stack.Screen name="CheckinWithNric" component={CheckinWithNric} options={{ headerShown: false }} />
         <Stack.Screen name="ProfileRegistration" component={ProfileRegistration} options={{ headerShown: false }} />
+        <Stack.Screen name="ScannerFromCheckin" component={ScannerFromCheckin} options={{ headerShown: false }} />
+        <Stack.Screen name="ScannerFromRegistration" component={ScannerFromRegistration} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

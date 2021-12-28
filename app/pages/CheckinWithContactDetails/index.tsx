@@ -11,11 +11,13 @@ import ContactDetailsInput from '@root/components/ContactDetailsInput';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function CheckinWithContactDetails({ navigation }: Props) {
-  const { event, firstName, lastName, phone, idHash } = useContext(EventContext);
+  const { event, firstName, lastName, phone } = useContext(EventContext);
 
-  const handleOnCheckIn = useCallback(async () => {
+  const handleOnCheckIn = useCallback(() => {
     if (firstName && lastName && phone) {
       navigation.navigate('ProfileRegistration', { needsNric: true });
+    } else {
+      console.log({firstName, lastName, phone});
     }
   }, [firstName, lastName, event, phone]);
 

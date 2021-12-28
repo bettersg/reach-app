@@ -1,9 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import {
   Image,
   Dimensions,
   LayoutRectangle,
-  Platform,
   StyleSheet,
   View,
   Text,
@@ -11,7 +10,6 @@ import {
 } from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
-import Constants from 'expo-constants';
 import LoadingView from '@root/components/LoadingView';
 import { Ionicons } from '@expo/vector-icons';
 import IdScannerCamera from '@root/components/IdScanner/components/IdScannerCamera';
@@ -22,6 +20,8 @@ import { useIsFocused } from '@react-navigation/native';
 import validateNric from '@root/utils/validateNric';
 import { EventContext } from '@root/navigation/providers/CheckinProvider';
 import { hash } from '@root/utils/cryptography';
+import { registerCheckin } from '@root/utils/events.datastore';
+import { getExistingNricProfile } from '@root/utils/profiles.datastore';
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
   [BarCodeScanner.Constants.BarCodeType.qr]: { width: 0.7, height: 0.35 },
@@ -61,14 +61,12 @@ const getInterestAreaDimensions = (
   };
 };
 
-
-type Props = StackScreenProps<RootStackParamList, 'Scanner'>;
+type Props = StackScreenProps<RootStackParamList, 'ScannerFromCheckin'>;
 
 export default function Scanner({ navigation }: Props) {
-  const { event, setIdHash } = useContext(EventContext);
+  const { setIdHash, event, setFirstName } = useContext(EventContext);
   const [enableScanning, setEnableScanning] = useState(true);
   const isFocused = useIsFocused();
-  const [platform] = useState<string>(Platform.OS);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const barCodeTypes = [BarCodeScanner.Constants.BarCodeType.code39];
   const [interestArea] = useState<LayoutRectangle | undefined>(getInterestAreaDimensions(barCodeTypes));
@@ -87,33 +85,9 @@ export default function Scanner({ navigation }: Props) {
         onCancel();
       }
     };
-
     askForCameraPermission();
   }, [onCancel]);
 
-  const checkIfInInterestArea: BarCodeScannedCallback = (event) => {
-    const { bounds } = event;
-    if (bounds && interestArea) {
-      const { origin, size: boundsSize } = bounds;
-      const { x: interestAreaX, y: interestAreaY } = interestArea;
-      if (origin && boundsSize && interestAreaX && interestAreaY) {
-        const { x: boundsX, y: boundsY } = origin;
-        const { width: boundsWidth, height: boundsHeight } = boundsSize;
-        const { width: interestAreaWidth, height: interestAreaHeight } =
-          interestArea;
-        if (
-          boundsX >= interestAreaX &&
-          boundsY >= interestAreaY &&
-          boundsX + boundsWidth <= interestAreaX + interestAreaWidth &&
-          boundsY + boundsHeight <= interestAreaY + interestAreaHeight
-        ) {
-          if (onBarCodeScanned) {
-            onBarCodeScanned(event);
-          }
-        }
-      }
-    }
-  };
 
   const onBarCodeScanned: BarCodeScannedCallback = (barCodeEvent) => {
     if (barCodeEvent.data && isFocused && enableScanning) {
@@ -122,25 +96,29 @@ export default function Scanner({ navigation }: Props) {
       const isNricValid = validateNric(nric);
       if (isNricValid) {
         (async () => {
-          if (setIdHash) setIdHash(await hash(nric));
-          navigation.navigate('ProfileRegistration', {needsNric: false});
+          if (setIdHash) {
+            const idHashInput = await hash(nric);
+            setIdHash(idHashInput);
+            const existingProfile = await getExistingNricProfile(idHashInput);
+            if (existingProfile !== undefined) {
+              setFirstName!(existingProfile.firstName);  // For happy face display of name
+              await registerCheckin(idHashInput, event!);
+              navigation.navigate('SuccessfulCheckin');
+            } else {
+              navigation.navigate('ProfileRegistration', { needsNric: false });
+            }
+          }
         })();
       }
     }
   };
-  
 
   return (
     <View style={styles.container}>
       <View style={styles.cameraWrapper}>
       {hasCameraPermission ? (
         <IdScannerCamera
-          onBarCodeScanned={
-            platform === 'android' &&
-            Constants.isDevice
-              ? checkIfInInterestArea
-              : onBarCodeScanned
-          }
+          onBarCodeScanned={onBarCodeScanned}
           cancelButtonText={'Cancel'}
           onCancel={onCancel}
           barCodeTypes={barCodeTypes}
@@ -156,7 +134,7 @@ export default function Scanner({ navigation }: Props) {
           </View>
           <View style={{flex: 1, borderWidth: 2, borderColor: 'black'}} />
           <View style={styles.keyboardWrapper}> 
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('ManualInput')}>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('CheckinTabs')}>
               <Image source={require('@root/assets/images/keyboard.png')} style={styles.keyboard} />
             </TouchableWithoutFeedback>
           </View>

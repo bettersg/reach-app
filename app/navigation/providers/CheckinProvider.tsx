@@ -30,7 +30,7 @@ function initEventContext() {
     idHash, setIdHash,
     firstName, setFirstName,
     lastName, setLastName,
-    phone, setPhone
+    phone, setPhone,
   };
 }
 

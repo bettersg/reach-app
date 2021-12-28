@@ -1,5 +1,5 @@
-import React, {useCallback, useContext, useEffect} from 'react';
-import { Image, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import React, {useCallback, useContext} from 'react';
+import { Image, Text, View, TouchableOpacity } from 'react-native';
 import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { createOrGetEvent } from '@root/utils/events.datastore';
@@ -7,18 +7,22 @@ import {EventContext} from '@root/navigation/providers/CheckinProvider';
 import moment from 'moment-timezone';
 import ContentFrame from '@root/components/ContentFrame';
 import { commonStyles } from '@root/commonStyles';
+import { useFocusEffect } from '@react-navigation/native';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function Home({ navigation }: Props) {
-  const { setEvent, setFirstName, setLastName, setIdHash } = useContext(EventContext);
+  const { setEvent, setFirstName, setLastName, setIdHash, setPhone } = useContext(EventContext);
 
-  // Reset state
-  useEffect(() => {
+  const reset = useCallback(() => {
     setFirstName!(undefined);
     setLastName!(undefined);
     setIdHash!(undefined);
     setEvent!(undefined);
-  }, []);
+    setPhone!(undefined);
+  }, [setEvent, setFirstName, setLastName, setIdHash, setPhone]);
+
+  // Reset state
+  useFocusEffect(reset);
 
   async function handleDropIn() {
     if (!setEvent) return;
@@ -35,10 +39,6 @@ export default function Home({ navigation }: Props) {
     createOrGetEvent(programName);
     navigation.navigate('CheckinTabs');
   }
-
-  const handleOnHistory = useCallback(() => {
-    navigation.navigate('History');
-  }, []);
 
   return (
     <ContentFrame>
@@ -57,7 +57,7 @@ export default function Home({ navigation }: Props) {
           <View style={{flex: 0.3}} />
         </TouchableOpacity>
       </View>
-      <Text onPress={handleOnHistory} style={{position: 'absolute', bottom: 0, right: 0}}>See History</Text>
+      <Text onPress={() => navigation.navigate('History')} style={{position: 'absolute', bottom: 0, right: 0}}>See History</Text>
     </ContentFrame>
   );
 }

@@ -7,6 +7,8 @@ export type RootStackParamList = {
   CheckinTabs: undefined;
   SuccessfulCheckin: undefined;
   ProfileRegistration: { needsNric: boolean };
+  ScannerFromRegistration: undefined;
+  ScannerFromCheckin: undefined;
 };
 
 export type Page = keyof RootStackParamList;

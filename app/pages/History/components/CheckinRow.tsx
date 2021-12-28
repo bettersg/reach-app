@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import {Checkin, NameCheckin, ProfileCheckin} from '@root/utils/events.datastore';
 import moment from 'moment-timezone';
@@ -10,7 +10,7 @@ type Props = {
 
 const CheckinRow = ({ checkin }: Props) => {
     const [fullName, setFullName] = React.useState<string | undefined>('Loading...');
-    React.useEffect(() => {
+    useEffect(() => {
         (async () => {
             if (checkin.identity === 'NAME') {
                 setFullName((checkin as NameCheckin).fullName);

@@ -1,5 +1,5 @@
-import React, {useContext, useCallback, useEffect } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import React, {useContext, useCallback } from 'react';
+import { Text, View } from 'react-native';
 import { SolidButton, Spacer } from '@root/components';
 import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -12,27 +12,26 @@ import ContactDetailsInput from '@root/components/ContactDetailsInput';
 import NricInput from '@root/components/NricInput';
 import { WhitespaceButton } from '@root/components/SolidButton';
 import { registerCheckin, registerNameCheckin } from '@root/utils/events.datastore';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = StackScreenProps<RootStackParamList, 'ProfileRegistration'>;
 
 export default function ProfileRegistration({ route, navigation }: Props) {
-  const { idHash, firstName, lastName, phone, event } = useContext(EventContext);
-  
+  const { idHash, firstName, lastName, phone, event, setFirstName } = useContext(EventContext);
   const { needsNric } = route.params;
-  
-  console.log({
-    idHash, firstName, lastName, phone, event
-  });
 
-  useEffect(() => {
+  const handleLogin = useCallback(() => {
     (async () => {
       const existingProfile = idHash ? await getExistingNricProfile(idHash) : undefined;
       if (existingProfile !== undefined) {
+        setFirstName!(existingProfile.firstName); // For happy face display of name
         await registerCheckin(idHash!, event!);
         navigation.navigate('SuccessfulCheckin');
       }
     })();
-  }, [idHash, event]);
+  }, []);
+
+  useFocusEffect(handleLogin);
 
   const handleOnSubmit = useCallback(async () => {
     if (firstName && lastName && phone && event && idHash) {
@@ -45,6 +44,8 @@ export default function ProfileRegistration({ route, navigation }: Props) {
         });
         await registerCheckin(idHash, event!);
         navigation.navigate('SuccessfulCheckin');
+    } else {
+      console.log({firstName, lastName, event, phone, idHash});
     }
   }, [firstName, lastName, event, phone, idHash]);
 
@@ -60,7 +61,7 @@ export default function ProfileRegistration({ route, navigation }: Props) {
         <Text style={commonStyles.actionText}>Enter your NRIC</Text>
       </View>
       <Spacer/>
-      <NricInput/>
+      <NricInput onScan={() => navigation.navigate('ScannerFromRegistration')}/>
       <View style={commonStyles.thickPad}>
         <SolidButton label={'SUBMIT'} onPress={handleOnSubmit} />
         <WhitespaceButton label={'SKIP'} onPress={handleOnSkip} />

@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Scanner from '@root/pages/Scanner';
-import { createStackNavigator } from '@react-navigation/stack';
-import ManualInput from '@root/pages/ManualInput';
 import CheckinWithContactDetails from '@root/pages/CheckinWithContactDetails';
+import CheckinWithNric from '@root/pages/CheckinWithNric';
 
-
-const NricStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const screenOptions = ({ route }: { route: any}) => ({
@@ -20,18 +16,10 @@ const screenOptions = ({ route }: { route: any}) => ({
   },
 });
 
-function Nric() {
-  return (
-  <NricStack.Navigator>
-    <NricStack.Screen name="ManualInput" component={ManualInput} options={{ headerShown: false }} />
-    <NricStack.Screen name="Scanner" component={Scanner} options={{ headerShown: false }}/>
-  </NricStack.Navigator>);
-}
-
 export default function CheckinTabs() {
   return (
     <Tab.Navigator screenOptions={screenOptions}>
-      <Tab.Screen name="STUDENT PASS / NRIC" component={Nric} options={{ headerShown: false }}/>
+      <Tab.Screen name="STUDENT PASS / NRIC" component={CheckinWithNric} options={{ headerShown: false }}/>
       <Tab.Screen name="CONTACT DETAILS" component={CheckinWithContactDetails} options={{ headerShown: false }} />
     </Tab.Navigator>
   );

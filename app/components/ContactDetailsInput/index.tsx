@@ -13,27 +13,27 @@ export default function ContactDetailsInput() {
     const [showLastNameHint, setShowLastNameHint] = useState(false);
     const [showPhoneHint, setShowPhoneHint] = useState(false);
 
-    const handleOnChangeFirstName = useCallback(async (inputFirstName) => {
+    const handleOnChangeFirstName = useCallback((inputFirstName) => {
         const firstNameValid = inputFirstName.length !== 0;
         setShowFirstNameHint(!firstNameValid);
-        setFirstName(firstNameValid ? inputFirstName : undefined);
+        setFirstName!(firstNameValid ? inputFirstName : undefined);
     }, []);
 
-    const handleOnChangeLastName = useCallback(async (inputLastName) => {
+    const handleOnChangeLastName = useCallback((inputLastName) => {
         const lastNameValid = inputLastName.length !== 0;
         setShowLastNameHint(!lastNameValid);
-        setLastName(lastNameValid ? inputLastName : undefined);
+        setLastName!(lastNameValid ? inputLastName : undefined);
     }, []);
 
-    const handleOnChangePhone = useCallback(async (inputPhone) => {
+    const handleOnChangePhone = useCallback((inputPhone) => {
         const phoneValid = inputPhone.length === 8 && ['6', '8', '9'].includes(inputPhone.slice(0, 1));
         setShowPhoneHint(!phoneValid);
-        setPhone(phoneValid ? inputPhone : undefined);
+        setPhone!(phoneValid ? inputPhone : undefined);
     }, []);
 
     return (
         <View style={commonStyles.thickPad}>
-            <View style={styles.nameInputContainer}>
+            <View style={commonStyles.sideBySide}>
                 <View style={{flex: 3}}>
                     <TextInput label={'First name'} onChangeText={handleOnChangeFirstName}/>
                     <OptionalVisibility isVisible={showFirstNameHint}><Text style={commonStyles.hintText}>Enter your first name</Text></OptionalVisibility>
@@ -45,7 +45,7 @@ export default function ContactDetailsInput() {
                 </View>
             </View>
             <Spacer/>
-            <View style={styles.nameInputContainer}>
+            <View style={commonStyles.sideBySide}>
                 <View style ={{flex: 1}}>
                     <TextInput style={{width: '100%'}} label={'Phone number'} onChangeText={handleOnChangePhone}/>
                     <OptionalVisibility isVisible={showPhoneHint}>
@@ -56,12 +56,3 @@ export default function ContactDetailsInput() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    nameInputContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
-    }
-});
-  

@@ -47,6 +47,11 @@ export const commonStyles = StyleSheet.create({
         justifyContent: 'center', 
         flexDirection: 'row', 
         alignItems: 'center' 
-    }
+    },
+    sideBySide: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+      }
 });
   
