@@ -21,6 +21,7 @@ const ContentFrame: React.FC<ContentFrame> = ({
     require('@root/assets/images/lines-grey.png'),
     require('@root/assets/images/contact-phone-blue.png'),
     require('@root/assets/images/contact-phone-grey.png'),
+    require('@root/assets/images/camera-icon.png')
   ]);
 
   if (!assets) {

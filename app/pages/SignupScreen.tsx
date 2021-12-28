@@ -1,17 +1,18 @@
-import {initFirebase} from '@root/utils/initFirebaseApp';
-import { StatusBar } from 'expo-status-bar';
+import { initFirebase } from '@root/utils/initFirebaseApp';
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
+import { Text, View } from 'react-native';
 import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
-import { SolidButton } from '../components';
 import { TextInput } from 'react-native-paper';
-import { Colors } from '@root/constants';
+
+import { SolidButton, Spacer, } from '../components';
+import { commonStyles } from '@root/commonStyles';
+import { WhitespaceButton } from '@root/components/SolidButton';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 const {auth} = initFirebase();
 
-export default function SignupScreen({navigation}: Props) {
+export default function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -22,42 +23,30 @@ export default function SignupScreen({navigation}: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar />
-      <Text style={styles.title}>Create new account. Temporary step for Firebase backend.</Text>
+    <View style={{...commonStyles.thickPad, backgroundColor: 'white', height: '100%'}}>
+      <Spacer height={50}/>
+      <Text style={commonStyles.actionText}>Sign up for a new account</Text>
+      <Spacer height={50}/>
       <TextInput
         label={'Enter email'}
         onChangeText={setEmail}
+        style={{width:'100%'}}
       />
+      <Spacer height={20}/>
       <TextInput
         label={'Enter password'}
         onChangeText={setPassword}
+        style={{width:'100%'}}
       />
+      <Spacer height={30}/>
       <SolidButton
         onPress={onHandleSignup}
-        label='Signup'
+        label='SIGN UP'
       />
-      <RNButton
+      <WhitespaceButton
         onPress={() => navigation.navigate('Login')}
-        title='Go to Login'
-        color='#fff'
+        label='GO TO LOGIN'
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.primary,
-    paddingTop: 50,
-    paddingHorizontal: 12
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#fff',
-    alignSelf: 'center',
-    paddingBottom: 24
-  }
-});

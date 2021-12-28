@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
 type Props = {
   title: string;
   totalScanned: number;
-  onPress: (eventId: string) => void;
+  onPress?: (eventId: string) => void;
 };
 
 const EventDetailRow = ({ title, totalScanned, onPress }: Props) => {
@@ -29,14 +29,14 @@ const EventDetailRow = ({ title, totalScanned, onPress }: Props) => {
 const styles = StyleSheet.create({
   root: {
     backgroundColor: 'white',
-    paddingHorizontal: 10,
-    paddingVertical: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
     justifyContent: 'center',
     flexDirection: 'row',
   },
   leftContent: {
     alignItems: 'flex-start',
-    flex: 9,
+    flex: 8,
   },
   rightContent: {
     justifyContent: 'center',

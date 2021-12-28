@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { AuthenticatedUserProvider } from './providers/AuthenticatedUserProvider';
 import { CheckinProvider } from './providers/CheckinProvider';
 import RootStack from './RootStack';
 
@@ -9,8 +9,10 @@ import RootStack from './RootStack';
 
 export default function Routes() {
     return (
-        <CheckinProvider>
-            <RootStack />
-        </CheckinProvider>
+        <AuthenticatedUserProvider>
+            <CheckinProvider>
+                <RootStack />
+            </CheckinProvider>
+        </AuthenticatedUserProvider>
     );
 }

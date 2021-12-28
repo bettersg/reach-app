@@ -1,3 +1,4 @@
+import { myUid } from '@root/navigation/RootStack';
 import { initFirebase } from './initFirebaseApp';
 
 const {fs} = initFirebase();
@@ -12,6 +13,8 @@ export interface Profile {
 
 export async function registerProfile(profile: Profile) {
   await fs
+    .collection('accounts')
+    .doc(myUid)
     .collection('profiles')
     .doc(profile.idHash)
     .set(profile);
@@ -20,6 +23,8 @@ export async function registerProfile(profile: Profile) {
 export async function getExistingNricProfile(idHash: string): Promise<Profile | undefined> {
   try {
     return fs
+    .collection('accounts')
+    .doc(myUid)
     .collection('profiles')
     .doc(idHash)
     .get()
@@ -30,12 +35,14 @@ export async function getExistingNricProfile(idHash: string): Promise<Profile | 
 }
 
 export async function getExistingNameProfile(firstName: string, lastName: string): Promise<Profile | undefined> {
-    const matches = await fs
-        .collection('profiles')
-        .where('firstName', '==', firstName)
-        .where('lastName', '==', lastName)
-        .get()
-        .then(snapshot => snapshot.docs.map(doc => doc.data() as Profile));
-    
-    return matches.length > 0 ? matches[0] : undefined;
+  const matches = await fs
+    .collection('accounts')
+    .doc(myUid) 
+    .collection('profiles')
+    .where('firstName', '==', firstName)
+    .where('lastName', '==', lastName)
+    .get()
+    .then(snapshot => snapshot.docs.map(doc => doc.data() as Profile));
+  
+  return matches.length > 0 ? matches[0] : undefined;
 }
