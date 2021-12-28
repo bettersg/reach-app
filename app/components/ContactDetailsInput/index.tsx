@@ -1,5 +1,5 @@
 import {useState, useContext, useCallback} from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import {EventContext} from '@root/navigation/providers/CheckinProvider';
 import { TextInput } from 'react-native-paper';
 import OptionalVisibility from '@root/components/OptionalVisibility';
