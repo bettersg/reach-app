@@ -1,5 +1,5 @@
 import ContentFrame from '@root/components/ContentFrame';
-import { RootStackParamList, Event } from '@root/types';
+import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import {EventContext} from '@root/navigation/providers/CheckinProvider';
 import React, { useState, useContext } from 'react';
@@ -27,9 +27,8 @@ export default function MyCalendar({ navigation }: Props) {
   async function renderEventsOnDate(selectedMoment: moment.Moment) {
     const events = await getEventsOnDate(selectedMoment);
     const eventSummaries = await Promise.all(events.map(event => getEventSummary(event)));
-    if (setEvents) setEvents(eventSummaries);
+    if (setEvents) setEvents(eventSummaries.filter(eventSummary => eventSummary.numCheckins > 0));
   }
-  getEventsOnDate;
 
   return <ContentFrame onBack={() => navigation.navigate('Home')}>
     <Calendar

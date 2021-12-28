@@ -38,7 +38,6 @@ export default function Home({ navigation }: Props) {
 
   // Reset state upon reaching Home
   useFocusEffect(useCallback(() => {
-    console.log(user!.uid);
     setFirstName!(undefined);
     setLastName!(undefined);
     setIdHash!(undefined);

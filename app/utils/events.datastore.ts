@@ -1,8 +1,8 @@
+import { myUid } from '@root/navigation/RootStack';
 import moment from 'moment-timezone';
 import { initFirebase } from './initFirebaseApp';
 
 const {fs} = initFirebase();
-
 export type Checkin = ProfileCheckin | NameCheckin;
 
 export interface NameCheckin {
@@ -29,21 +29,12 @@ export interface Event {
   time: number  // Epoch
 }
 
-/** Retrieves events which start +- 12 hrs from the specified epoch time (default = now) */
-export async function getActiveEvents(now: number = moment.now()): Promise<Event[]> {
-  const HALF_DAY_IN_MILLISECONDS = 43200000;
-  const WEEK_IN_MILLISECONDS = 604800000;
-  return fs
-    .collection('events')
-    .where('time', '>=', now - WEEK_IN_MILLISECONDS)
-    .where('time', '<', now + HALF_DAY_IN_MILLISECONDS)
-    .get()
-    .then(snapshot => snapshot.docs.map((doc) => doc.data() as Event));
-}
 
 /** Retrieves the number of unique checkins to an event. */
 export async function getEventSummary(event: Event): Promise<EventSummary> {
   const checkins = await fs
+    .collection('accounts')
+    .doc(myUid)
     .collection('checkins')
     .where('eventId', '==', event.eventId)
     .get()
@@ -63,47 +54,44 @@ export async function getEventSummary(event: Event): Promise<EventSummary> {
 }
 
 /** For NRIC. */
-export async function registerCheckin(idHash: string, eventId: string, checkinTimestamp: number = moment().unix()) {
+export async function registerCheckin(idHash: string, eventId: string) {
   const checkin: Checkin = {
     idHash,
     eventId,
-    checkinTimestamp,
+    checkinTimestamp: moment().unix(),
     identity: 'PROFILE'
   };
   
   await fs
+    .collection('accounts')
+    .doc(myUid)
     .collection('checkins')
     .doc()
     .set(checkin);
 }
 
-export async function registerNameCheckin(name: string, phone: string, eventId: string, checkinTimestamp: number = moment().unix()) {
+export async function registerNameCheckin(name: string, phone: string, eventId: string) {
   const checkin: Checkin = {
     fullName: name,
     eventId,
-    checkinTimestamp,
+    checkinTimestamp: moment().unix(),
     identity: 'NAME',
     phone
   };
   
   await fs
+    .collection('accounts')
+    .doc(myUid)
     .collection('checkins')
     .doc()
     .set(checkin);
 }
 
-/** Retrieves the checkins to an event. */
-export async function getEventCheckins(eventId: string): Promise<Checkin[]> {
-  return fs
-      .collection('checkins')
-      .where('eventId', '==', eventId)
-      .get()
-      .then(snapshot => snapshot.docs.map(doc => doc.data() as Checkin));
-}
-
 /** If event does not yet exist, creates one for it with now as default timestamp. */
 export async function createOrGetEvent(eventId: string) {
   const eventRef = fs
+    .collection('accounts')
+    .doc(myUid)
     .collection('events')
     .doc(eventId);
 
@@ -122,9 +110,11 @@ export async function createOrGetEvent(eventId: string) {
 
 export async function getEventsOnDate(date: moment.Moment): Promise<Event[]> {
   return fs
-      .collection('events')
-      .where('time', '>=', date.startOf('day').unix()* 1000)
-      .where('time', '<=', date.endOf('day').unix() * 1000)
-      .get()
-      .then((snapshot) => snapshot.docs.map((doc) => doc.data() as Event));
+    .collection('accounts')
+    .doc(myUid) 
+    .collection('events')
+    .where('time', '>=', date.startOf('day').unix()* 1000)
+    .where('time', '<=', date.endOf('day').unix() * 1000)
+    .get()
+    .then((snapshot) => snapshot.docs.map((doc) => doc.data() as Event));
 }

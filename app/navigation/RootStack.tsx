@@ -17,14 +17,19 @@ import AuthStack from './AuthStack';
 const {auth} = initFirebase();
 const Stack = createStackNavigator();
 
+export const REACH_UID = 'futLaGLJNpafA9HgIdBzHjVnCro1';
+export let myUid = '';
+
 export default function RootStack() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
+    auth.signOut(); // Used for quick debug
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
       try {
+        myUid = authenticatedUser!.uid!;
         if (setUser) setUser(authenticatedUser);
         setIsLoading(false);
       } catch (error) {

@@ -1,14 +1,12 @@
 import { initFirebase } from '@root/utils/initFirebaseApp';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
-import { RootStackParamList, Event } from '@root/types';
+import { Text, View } from 'react-native';
+import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TextInput } from 'react-native-paper';
 
 import { SolidButton, Spacer, } from '../components';
-import { Colors } from '@root/constants';
 import { commonStyles } from '@root/commonStyles';
 import { WhitespaceButton } from '@root/components/SolidButton';
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
@@ -25,7 +23,7 @@ export default function LoginScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={{...commonStyles.thickPad, backgroundColor: 'white'}}>
+    <View style={{...commonStyles.thickPad, backgroundColor: 'white', height: '100%'}}>
       <Spacer height={50}/>
       <Text style={commonStyles.actionText}>Sign up for a new account</Text>
       <Spacer height={50}/>

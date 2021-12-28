@@ -1,9 +1,8 @@
 import { initFirebase } from '@root/utils/initFirebaseApp';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, View, Button as RNButton } from 'react-native';
-import { RootStackParamList, Event } from '@root/types';
+import { StyleSheet, Text, View } from 'react-native';
+import { RootStackParamList } from '@root/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TextInput } from 'react-native-paper';
 
@@ -29,7 +28,7 @@ export default function LoginScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={{...commonStyles.thickPad, backgroundColor: 'white'}}>
+    <View style={{...commonStyles.thickPad, backgroundColor: 'white', height: '100%'}}>
       <Spacer height={50}/>
       <Text style={commonStyles.actionText}>Log in to your account</Text>
       <Spacer height={50}/>
