@@ -11,7 +11,7 @@ import moment from 'moment-timezone';
 import ContactDetailsInput from '@root/components/ContactDetailsInput';
 import NricInput from '@root/components/NricInput';
 import { WhitespaceButton } from '@root/components/SolidButton';
-import { registerCheckin, registerNameCheckin } from '@root/utils/events.datastore';
+import { createOrGetEvent, registerCheckin, registerNameCheckin } from '@root/utils/events.datastore';
 import { useFocusEffect } from '@react-navigation/native';
 
 type Props = StackScreenProps<RootStackParamList, 'ProfileRegistration'>;
@@ -25,7 +25,9 @@ export default function ProfileRegistration({ route, navigation }: Props) {
       const existingProfile = idHash ? await getExistingNricProfile(idHash) : undefined;
       if (existingProfile !== undefined) {
         setFirstName!(existingProfile.firstName); // For happy face display of name
+        await createOrGetEvent(event!);
         await registerCheckin(idHash!, event!);
+        console.log('here');
         navigation.navigate('SuccessfulCheckin');
       }
     })();
@@ -42,6 +44,7 @@ export default function ProfileRegistration({ route, navigation }: Props) {
             phone,
             createdAt: moment().unix(),
         });
+        await createOrGetEvent(event!);
         await registerCheckin(idHash, event!);
         navigation.navigate('SuccessfulCheckin');
     } else {
@@ -50,6 +53,7 @@ export default function ProfileRegistration({ route, navigation }: Props) {
   }, [firstName, lastName, event, phone, idHash]);
 
   const handleOnSkip = useCallback(async () => {
+    await createOrGetEvent(event!);
     await registerNameCheckin(`${firstName} ${lastName}`, phone!, event!);
     navigation.navigate('SuccessfulCheckin');
   }, [firstName, lastName, phone, event]);

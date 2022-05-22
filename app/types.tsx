@@ -9,6 +9,7 @@ export type RootStackParamList = {
   ProfileRegistration: { needsNric: boolean };
   ScannerFromRegistration: undefined;
   ScannerFromCheckin: undefined;
+  ProgramSelect: undefined;
 };
 
 export type Page = keyof RootStackParamList;

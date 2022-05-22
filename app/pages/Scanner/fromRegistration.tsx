@@ -21,7 +21,7 @@ import validateNric from '@root/utils/validateNric';
 import { EventContext } from '@root/navigation/providers/CheckinProvider';
 import { hash } from '@root/utils/cryptography';
 import moment from 'moment';
-import { registerCheckin } from '@root/utils/events.datastore';
+import { createOrGetEvent, registerCheckin } from '@root/utils/events.datastore';
 import { registerProfile } from '@root/utils/profiles.datastore';
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
@@ -89,34 +89,28 @@ export default function Scanner({ navigation }: Props) {
     askForCameraPermission();
   }, [onCancel]);
 
-
-  const handleOnSubmit = useCallback(async () => {
-    if (firstName && lastName && phone && event && idHash) {
-        await registerProfile({
-            idHash,
-            firstName,
-            lastName,
-            phone,
-            createdAt: moment().unix(),
-        });
-        await registerCheckin(idHash, event!);
-        navigation.navigate('SuccessfulCheckin');
-    }
-  }, [firstName, lastName, event, phone, idHash]);
-
-  const onBarCodeScanned: BarCodeScannedCallback = (barCodeEvent) => {
+  const onBarCodeScanned: BarCodeScannedCallback = useCallback(async (barCodeEvent) => {
     if (barCodeEvent.data && isFocused && enableScanning) {
       setEnableScanning(false);
       const nric = barCodeEvent.data;
       const isNricValid = validateNric(nric);
       if (isNricValid) {
-        (async () => {
-          if (setIdHash) setIdHash(await hash(nric));
-          handleOnSubmit();
-        })();
+        setIdHash!(await hash(nric));
+        if (firstName && lastName && phone && event && idHash) {
+          await registerProfile({
+              idHash,
+              firstName,
+              lastName,
+              phone,
+              createdAt: moment().unix(),
+          });
+          await createOrGetEvent(event!);
+          await registerCheckin(idHash, event!);
+          navigation.navigate('SuccessfulCheckin');
+        }
       }
     }
-  };
+  }, [firstName, lastName, event, phone, idHash]);
 
   return (
     <View style={styles.container}>

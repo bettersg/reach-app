@@ -13,23 +13,27 @@ import CheckinWithNric from '@root/pages/CheckinWithNric';
 import { AuthenticatedUserContext } from './providers/AuthenticatedUserProvider';
 import { LoadingView } from '@root/components';
 import AuthStack from './AuthStack';
+import { setUid } from './uidHolder';
+import ProgramSelect from '@root/pages/ProgramSelect';
 
 const {auth} = initFirebase();
 const Stack = createStackNavigator();
-
-export const REACH_UID = 'futLaGLJNpafA9HgIdBzHjVnCro1';
-export let myUid = '';
 
 export default function RootStack() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
   
+  // useEffect(() => {
+  //   (async () => await auth.signInWithEmailAndPassword('any_email@gmail.com', 'anypassword'))();
+  // }, []);
+
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
-    auth.signOut(); // Used for quick debug
+    // auth.signOut(); // Used for quick debug
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
       try {
-        myUid = authenticatedUser!.uid!;
+        const newUid = authenticatedUser?.uid;
+        if (newUid) setUid(newUid);
         if (setUser) setUser(authenticatedUser);
         setIsLoading(false);
       } catch (error) {
@@ -41,17 +45,12 @@ export default function RootStack() {
     return unsubscribeAuth;
   }, []);
 
-  if (isLoading) return <LoadingView/>;
-
-  // useEffect(() => {
-  //   (async () => await auth.signInWithEmailAndPassword('any_email@gmail.com', 'anypassword'))();
-  // }, []);
-
-  return (
+  return isLoading ? <LoadingView/> : (
     <NavigationContainer>
         {user ? (
         <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
+        <Stack.Screen name="ProgramSelect" component={ProgramSelect} options={{ headerShown: false }} />
         <Stack.Screen name="CheckinTabs" component={CheckinTabs} options={{ headerShown: false }}/>
         <Stack.Screen name="History" component={History} options={{ headerShown: false }}/>
         <Stack.Screen name="SuccessfulCheckin" component={SuccessfulCheckin} options={{ headerShown: false }} />
