@@ -1,4 +1,4 @@
-import { myUid } from '@root/navigation/RootStack';
+import { myUid } from '@root/navigation/uidHolder';
 import { initFirebase } from './initFirebaseApp';
 
 const {fs} = initFirebase();

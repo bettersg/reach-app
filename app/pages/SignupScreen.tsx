@@ -1,5 +1,5 @@
 import { initFirebase } from '@root/utils/initFirebaseApp';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { RootStackParamList } from '@root/types';

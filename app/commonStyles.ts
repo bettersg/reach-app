@@ -48,6 +48,16 @@ export const commonStyles = StyleSheet.create({
         flexDirection: 'row', 
         alignItems: 'center' 
     },
+    skinnyMenuButton: {
+        borderStyle: 'solid', 
+        borderWidth: 2, 
+        borderColor: '#DDDDDD', 
+        width: normalize(350, 450), 
+        height: normalize(60, 90), 
+        justifyContent: 'center', 
+        flexDirection: 'row', 
+        alignItems: 'center' 
+    },
     sideBySide: {
         flexDirection: 'row',
         justifyContent: 'space-between',

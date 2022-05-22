@@ -27,5 +27,6 @@ export function initFirebase() {
       auth: app.auth()
     };
   }
+  
   return globalResources;
 }

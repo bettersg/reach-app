@@ -16,8 +16,6 @@ export default function CheckinWithContactDetails({ navigation }: Props) {
   const handleOnCheckIn = useCallback(() => {
     if (firstName && lastName && phone) {
       navigation.navigate('ProfileRegistration', { needsNric: true });
-    } else {
-      console.log({firstName, lastName, phone});
     }
   }, [firstName, lastName, event, phone]);
 
@@ -31,6 +29,7 @@ export default function CheckinWithContactDetails({ navigation }: Props) {
         <SolidButton label={'CHECK IN'} onPress={handleOnCheckIn} />
       </View>
       <View style={{flex: 3}}/>
+      <Text style={{position: 'absolute', bottom: 0, right: 0, color: 'grey'}}>{`Checking in for: ${event}`}</Text>
     </ContentFrame>
   );
 }

@@ -20,7 +20,7 @@ import { useIsFocused } from '@react-navigation/native';
 import validateNric from '@root/utils/validateNric';
 import { EventContext } from '@root/navigation/providers/CheckinProvider';
 import { hash } from '@root/utils/cryptography';
-import { registerCheckin } from '@root/utils/events.datastore';
+import { createOrGetEvent, registerCheckin } from '@root/utils/events.datastore';
 import { getExistingNricProfile } from '@root/utils/profiles.datastore';
 
 const interestAreaRatios: Record<string, Record<string, number>> = {
@@ -96,17 +96,16 @@ export default function Scanner({ navigation }: Props) {
       const isNricValid = validateNric(nric);
       if (isNricValid) {
         (async () => {
-          if (setIdHash) {
-            const idHashInput = await hash(nric);
-            setIdHash(idHashInput);
-            const existingProfile = await getExistingNricProfile(idHashInput);
-            if (existingProfile !== undefined) {
-              setFirstName!(existingProfile.firstName);  // For happy face display of name
-              await registerCheckin(idHashInput, event!);
-              navigation.navigate('SuccessfulCheckin');
-            } else {
-              navigation.navigate('ProfileRegistration', { needsNric: false });
-            }
+          const idHashInput = await hash(nric);
+          setIdHash!(idHashInput);
+          const existingProfile = await getExistingNricProfile(idHashInput);
+          if (existingProfile !== undefined) {
+            setFirstName!(existingProfile.firstName);  // For happy face display of name
+            await createOrGetEvent(event!);
+            await registerCheckin(idHashInput, event!);
+            navigation.navigate('SuccessfulCheckin');
+          } else {
+            navigation.navigate('ProfileRegistration', { needsNric: false });
           }
         })();
       }

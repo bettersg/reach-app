@@ -1,4 +1,4 @@
-import { myUid } from '@root/navigation/RootStack';
+import { myUid } from '@root/navigation/uidHolder';
 import moment from 'moment-timezone';
 import { initFirebase } from './initFirebaseApp';
 

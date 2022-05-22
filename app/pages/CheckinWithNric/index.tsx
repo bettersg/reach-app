@@ -8,26 +8,25 @@ import ContentFrame from '@root/components/ContentFrame';
 import { commonStyles } from '@root/commonStyles';
 import NricInput from '@root/components/NricInput';
 import { getExistingNricProfile } from '@root/utils/profiles.datastore';
-import { registerCheckin } from '@root/utils/events.datastore';
+import { createOrGetEvent, registerCheckin } from '@root/utils/events.datastore';
+import { grey100 } from 'react-native-paper/lib/typescript/styles/colors';
 
 type Props = StackScreenProps<RootStackParamList, 'Home'>;
 
 export default function CheckinWithNric({ navigation }: Props) {
   const { idHash, setFirstName, event } = useContext(EventContext);
 
-  const handleOnCheckIn = useCallback(() => {
-    (async () => {
-      if (idHash) {
-        const existingProfile = idHash ? await getExistingNricProfile(idHash) : undefined;
-        if (existingProfile !== undefined) {
-          await registerCheckin(idHash!, event!);
-          setFirstName!(existingProfile.firstName); // For happy face display of name
-          navigation.navigate('SuccessfulCheckin');
-        } else {
-          navigation.navigate('ProfileRegistration', { needsNric: false });
-        }
-      }
-    })();
+  const handleOnCheckIn = useCallback(async () => {
+    const existingProfile = idHash ? await getExistingNricProfile(idHash) : undefined;
+    if (existingProfile !== undefined) {
+      await createOrGetEvent(event!);
+      console.log(event);
+      await registerCheckin(idHash!, event!);
+      setFirstName!(existingProfile.firstName); // For happy face display of name
+      navigation.navigate('SuccessfulCheckin');
+    } else {
+      navigation.navigate('ProfileRegistration', { needsNric: false });
+    }
   }, [idHash]);
 
   return (
@@ -39,6 +38,7 @@ export default function CheckinWithNric({ navigation }: Props) {
       <View style={commonStyles.thickPad}>
         <SolidButton label={'CHECK IN'} onPress={handleOnCheckIn} />
       </View>
+      <Text style={{position: 'absolute', bottom: 0, right: 0, color: 'grey'}}>{`Checking in for: ${event}`}</Text>
     </ContentFrame>
   );
 }
